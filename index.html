@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aashish Gill | Digital Designer</title>
+    <style>
+        /* --- PROFESSIONAL RESET & VARIABLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* High-end selection style */
+        ::selection {
+            background: #000;
+            color: #fff;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            /* Serif font stack */
+            font-family: "Times New Roman", Times, Baskerville, Georgia, serif;
+            font-size: 18px; 
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            opacity: 0; 
+            animation: fadeInPage 1.5s ease forwards; /* Smooth fade in */
+        }
+
+        /* Page Fade In Animation */
+        @keyframes fadeInPage {
+            to { opacity: 1; }
+        }
+
+        a {
+            text-decoration: none;
+            color: #000000;
+            transition: opacity 0.3s ease;
+        }
+
+        a:hover {
+            opacity: 0.5; 
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav li a {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: normal;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        main {
+            padding-top: 25vh;
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* --- INTRO SECTION --- */
+        .intro {
+            margin-bottom: 10rem;
+            text-align: left; 
+        }
+
+        .intro h1 {
+            font-size: 3.5rem; 
+            font-weight: normal;
+            line-height: 1.1;
+            max-width: 700px;
+            letter-spacing: -0.03em;
+        }
+
+        .intro p {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* --- POSTER GRID --- */
+        .work-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8rem; 
+            padding-bottom: 6rem;
+        }
+
+        .poster-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .poster-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+        
+        /* Hover Effect: Subtle Lift */
+        .poster-container img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 4rem 5%;
+            font-size: 0.8rem;
+            border-top: 1px solid #eaeaea;
+            margin-top: 5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- MOBILE TWEAKS --- */
+        @media (max-width: 768px) {
+            header { padding: 1.5rem 5%; }
+            .brand-name { font-size: 1.2rem; }
+            .intro h1 { font-size: 2.2rem; }
+            main { padding-top: 20vh; width: 88%; }
+            .work-grid { gap: 4rem; }
+            footer { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-name">Aashish Gill</div>
+        <nav>
+            <ul>
+                <li><a href="#" target="_blank">Instagram</a></li>
+                <li><a href="#" target="_blank">Twitter</a></li>
+                <li><a href="mailto:your-email@example.com">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        
+        <section class="intro">
+            <h1>Digital designer based in New Delhi.</h1>
+            <p>Specializing in visual identity and poster design.</p>
+        </section>
+
+        <section class="work-grid">
+            
+            <div class="poster-container">
+                <img src="assets/image1.jpeg" alt="Design Work 1">
+            </div>
+
+            <div class="poster-container">
+                <img src="assets/image2.jpeg" alt="Design Work 2">
+            </div>
+
+            <div class="poster-container">
+                <img src="assets/image3.jpeg" alt="Design Work 3">
+            </div>
+
+            <div class="poster-container">
+                <img src="assets/image4.jpeg" alt="Design Work 4">
+            </div>
+
+            <div class="poster-container">
+                <img src="assets/image5.jpeg" alt="Design Work 5">
+            </div>
+
+            <div class="poster-container">
+                <img src="assets/image6.jpeg" alt="Design Work 6">
+            </div>
+
+            <div class="poster-container">
+                <img src="assets/image7.jpeg" alt="Design Work 7">
+            </div>
+
+            <div class="poster-container">
+                <img src="assets/image8.jpeg" alt="Design Work 8">
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div>&copy; 2025 Aashish Gill</div>
+        <div>New Delhi, India</div>
+    </footer>
+
+</body>
+</html>
