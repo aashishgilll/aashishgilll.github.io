@@ -50,7 +50,7 @@
             z-index: 100;
         }
 
-        /* NAME: Sans Serif as requested */
+        /* NAME: Sans Serif */
         .brand-name {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 1.5rem;
@@ -92,7 +92,7 @@
 
         /* --- INTRO SECTION --- */
         .intro {
-            margin-bottom: 8rem;
+            margin-bottom: 6rem; /* Gap between intro text and the Nike title */
             text-align: left; 
         }
 
@@ -102,6 +102,17 @@
             line-height: 1.15;
             max-width: 750px;
             letter-spacing: -0.02em;
+        }
+
+        /* --- NEW TITLE: NIKE ARCHITECTURE --- */
+        .separator-title {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: 700; /* Bold */
+            font-size: 2rem; /* Big */
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 3rem; /* Space between title and the top image */
+            white-space: nowrap; /* Forces one line */
         }
 
         /* --- WORK GRID (Videos & Images) --- */
@@ -153,11 +164,11 @@
         /* --- MOBILE OPTIMIZATIONS --- */
         @media (max-width: 768px) {
             header {
-                padding: 1.5rem 1.5rem; /* Less padding on mobile */
+                padding: 1.5rem 1.5rem; 
             }
 
             .brand-name {
-                font-size: 1.2rem; /* Smaller name */
+                font-size: 1.2rem; 
             }
 
             main {
@@ -166,15 +177,20 @@
             }
 
             .intro {
-                margin-bottom: 4rem; /* Less gap before work */
+                margin-bottom: 4rem; 
             }
 
             .intro h1 {
-                font-size: 1.8rem; /* Readable size for phone */
+                font-size: 1.8rem; 
+            }
+
+            .separator-title {
+                font-size: 1.4rem; /* Smaller title on mobile */
+                margin-bottom: 2rem;
             }
 
             .work-grid {
-                gap: 3rem; /* Tighter spacing between works */
+                gap: 3rem; 
             }
 
             nav ul {
@@ -182,7 +198,7 @@
             }
             
             .icon {
-                width: 20px; /* Slightly smaller icons */
+                width: 20px; 
                 height: 20px;
             }
 
@@ -232,12 +248,21 @@
             <h1>New Delhi based creative director and designer working across film, digital design and visual storytelling.</h1>
         </section>
 
+        <!-- TITLE: NIKE ARCHITECTURE -->
+        <!-- Placed between intro and the work grid -->
+        <div class="separator-title">"NIKE ARCHITECTURE"</div>
+
         <!-- Gallery -->
         <section class="work-grid">
 
-            <!-- VIDEO 1 (Top of list) -->
+            <!-- NEW TOP IMAGE -->
             <div class="media-container">
-                <!-- IMPORTANT: Name your file video1.mp4 in assets folder -->
+                <!-- IMPORTANT: Name your file top-image.jpg in assets folder -->
+                <img src="assets/top-image.jpg" alt="Nike Architecture">
+            </div>
+
+            <!-- VIDEO 1 -->
+            <div class="media-container">
                 <video autoplay loop muted playsinline>
                     <source src="assets/video1.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -246,7 +271,6 @@
 
             <!-- VIDEO 2 -->
             <div class="media-container">
-                <!-- IMPORTANT: Name your file video2.mp4 in assets folder -->
                 <video autoplay loop muted playsinline>
                     <source src="assets/video2.mp4" type="video/mp4">
                     Your browser does not support the video tag.
