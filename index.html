@@ -97,7 +97,7 @@
         main {
             padding-top: 25vh;
             width: 90%;
-            max-width: 900px;
+            max-width: 1100px; /* Expanded slightly to give side-by-side items room to breathe */
             margin: 0 auto;
         }
 
@@ -105,9 +105,6 @@
         .intro {
             margin-bottom: 6rem;
             text-align: left;
-            /* Optional: Add a white background to text if video makes it hard to read */
-            /* background-color: rgba(255,255,255,0.8); */
-            /* padding: 1rem; */
         }
 
         .intro h1 {
@@ -118,7 +115,7 @@
             letter-spacing: -0.02em;
         }
 
-        /* --- NEW TITLE: NIKE ARCHITECTURE --- */
+        /* --- TITLE: NIKE ARCHITECTURE --- */
         .separator-title {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-weight: 700; /* Bold */
@@ -129,11 +126,11 @@
             white-space: nowrap; 
         }
 
-        /* --- WORK GRID (Videos & Images) --- */
+        /* --- TWO-COLUMN WORK GRID --- */
         .work-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8rem; /* Space between items */
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Creates side-by-side rows */
+            gap: 4rem 3rem; /* Row gap, Column gap */
             padding-bottom: 6rem;
         }
 
@@ -204,7 +201,9 @@
                 margin-bottom: 2rem;
             }
 
+            /* Switches back to a single column on mobile frames */
             .work-grid {
+                grid-template-columns: 1fr;
                 gap: 3rem; 
             }
 
@@ -228,20 +227,16 @@
 </head>
 <body>
 
-    <!-- BACKGROUND VIDEO LOOP -->
     <div class="video-bg-fixed">
-        <!-- IMPORTANT: Name your file background-loop.mp4 in assets folder -->
         <video autoplay loop muted playsinline>
             <source src="assets/background-loop.mp4" type="video/mp4">
         </video>
     </div>
 
-    <!-- Header -->
     <header>
         <div class="brand-name">Aashish Gill</div>
         <nav>
             <ul>
-                <!-- Email Icon Link -->
                 <li>
                     <a href="mailto:gillaashishh@gmail.com" aria-label="Email Me">
                         <svg class="icon" viewBox="0 0 24 24">
@@ -253,31 +248,24 @@
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main>
         
-        <!-- Intro -->
         <section class="intro">
             <h1>New Delhi based creative director and designer working across film, digital design and visual storytelling.</h1>
         </section>
 
-        <!-- TITLE: NIKE ARCHITECTURE -->
         <div class="separator-title">"NIKE ARCHITECTURE"</div>
 
-        <!-- Gallery -->
         <section class="work-grid">
 
-            <!-- NEW TOP IMAGE -->
             <div class="media-container">
                 <img src="assets/top-image.jpg" alt="Nike Architecture">
             </div>
 
-            <!-- SECOND IMAGE -->
             <div class="media-container">
                 <img src="assets/second-image.jpg" alt="Second Work">
             </div>
 
-            <!-- VIDEO 1 -->
             <div class="media-container">
                 <video autoplay loop muted playsinline>
                     <source src="assets/video1.mp4" type="video/mp4">
@@ -285,7 +273,6 @@
                 </video>
             </div>
 
-            <!-- VIDEO 2 -->
             <div class="media-container">
                 <video autoplay loop muted playsinline>
                     <source src="assets/video2.mp4" type="video/mp4">
@@ -293,42 +280,34 @@
                 </video>
             </div>
             
-            <!-- IMAGE 1 -->
             <div class="media-container">
                 <img src="assets/image1.jpg" alt="Design Work 1">
             </div>
 
-            <!-- IMAGE 2 -->
             <div class="media-container">
                 <img src="assets/image2.jpg" alt="Design Work 2">
             </div>
 
-            <!-- IMAGE 3 -->
             <div class="media-container">
                 <img src="assets/image3.jpg" alt="Design Work 3">
             </div>
 
-            <!-- IMAGE 4 -->
             <div class="media-container">
                 <img src="assets/image4.jpg" alt="Design Work 4">
             </div>
 
-            <!-- IMAGE 5 -->
             <div class="media-container">
                 <img src="assets/image5.jpg" alt="Design Work 5">
             </div>
 
-            <!-- IMAGE 6 -->
             <div class="media-container">
                 <img src="assets/image6.jpg" alt="Design Work 6">
             </div>
 
-            <!-- IMAGE 7 -->
             <div class="media-container">
                 <img src="assets/image7.jpg" alt="Design Work 7">
             </div>
 
-            <!-- IMAGE 8 -->
             <div class="media-container">
                 <img src="assets/image8.jpg" alt="Design Work 8">
             </div>
@@ -337,9 +316,8 @@
 
     </main>
 
-    <!-- Footer -->
     <footer>
-        <div>&copy; 2025 Aashish Gill</div>
+        <div>&copy; 2026 Aashish Gill</div>
         <div>New Delhi, India</div>
     </footer>
 
