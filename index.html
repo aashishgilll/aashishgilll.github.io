@@ -31,7 +31,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            z-index: -2; /* Pushed further back */
+            z-index: -2;
             overflow: hidden;
         }
         .video-bg-fixed::after {
@@ -51,15 +51,15 @@
             position: fixed;
             inset: 0;
             pointer-events: none;
-            z-index: -1; /* Moved behind content to prevent stacking bugs */
+            z-index: -1;
             opacity: 0.025;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
             background-repeat: repeat;
             background-size: 200px 200px;
         }
 
-        /* --- CUSTOM CURSOR (Wrapped in a11y & pointer media queries) --- */
-        #cursor, #cursor-ring { display: none; } /* Default hidden for touch/screen-readers */
+        /* --- CUSTOM CURSOR --- */
+        #cursor, #cursor-ring { display: none; }
 
         @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
             body { cursor: none; }
@@ -230,11 +230,6 @@
             background: #000;
             animation: lineScroll 2s ease-in-out 1.5s infinite;
         }
-        @keyframes lineScroll {
-            0% { left: -100%; }
-            50% { left: 0%; }
-            100% { left: 100%; }
-        }
 
         /* --- PROJECT HEADER --- */
         .project-header {
@@ -267,27 +262,26 @@
         .work-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 2rem 2rem;
+            gap: 4rem 3rem;
             padding-bottom: 8rem;
-        }
-
-        .work-grid .media-container:first-child {
-            grid-column: 1 / -1;
-            height: 520px;
+            /* FIX: Prevents items from stretching to match row height, enabling mixed layouts */
+            align-items: start; 
         }
 
         .media-container {
+            display: block;
             width: 100%;
             position: relative;
             overflow: hidden;
-            background: rgba(0,0,0,0.04);
+            background: rgba(0,0,0,0.02);
             opacity: 0;
             transform: translateY(40px);
             transition: opacity 0.9s var(--easing), transform 0.9s var(--easing);
         }
 
-        .media-container:not(:first-child) {
-            aspect-ratio: 4/3;
+        /* Full width breakout for main editorial content */
+        .work-grid .media-container:first-child {
+            grid-column: 1 / -1;
         }
 
         .media-container.visible {
@@ -295,59 +289,48 @@
             transform: translateY(0);
         }
 
-        /* Staggered delay per child */
-        .media-container:nth-child(2) { transition-delay: 0.1s; }
-        .media-container:nth-child(3) { transition-delay: 0.05s; }
-        .media-container:nth-child(4) { transition-delay: 0.15s; }
-        .media-container:nth-child(5) { transition-delay: 0.08s; }
-        .media-container:nth-child(6) { transition-delay: 0.18s; }
-        .media-container:nth-child(7) { transition-delay: 0.06s; }
-        .media-container:nth-child(8) { transition-delay: 0.14s; }
-        .media-container:nth-child(9) { transition-delay: 0.09s; }
-        .media-container:nth-child(10) { transition-delay: 0.16s; }
-        .media-container:nth-child(11) { transition-delay: 0.04s; }
-        .media-container:nth-child(12) { transition-delay: 0.12s; }
+        /* Animation delays */
+        .media-container:nth-child(2) { transition-delay: 0.05s; }
+        .media-container:nth-child(3) { transition-delay: 0.12s; }
+        .media-container:nth-child(4) { transition-delay: 0.08s; }
+        .media-container:nth-child(5) { transition-delay: 0.15s; }
 
+        /* FIX: Changed height from 100% to auto to display 18x24 dimensions entirely */
         .media-container img,
         .media-container video {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto; 
             display: block;
             transform: scale(1.0);
             transition: transform 0.8s var(--easing);
         }
 
-        /* Fix Parallax/Hover conflict using CSS variables */
-        .media-container:first-child img,
-        .media-container:first-child video {
+        /* Parallax effect variables safely calculated */
+        .work-grid .media-container:first-child img,
+        .work-grid .media-container:first-child video {
             transform: scale(1.0) translateY(var(--scroll-y, 0px));
         }
 
         .media-container:hover img,
         .media-container:hover video {
-            transform: scale(1.04);
+            transform: scale(1.02); 
         }
 
         .media-container:first-child:hover img,
         .media-container:first-child:hover video {
-            transform: scale(1.04) translateY(var(--scroll-y, 0px));
+            transform: scale(1.02) translateY(var(--scroll-y, 0px));
         }
 
-        /* Overlay label on hover */
         .media-overlay {
             position: absolute;
             inset: 0;
             background: rgba(0,0,0,0);
-            display: flex;
-            align-items: flex-end;
-            padding: 1.5rem;
             transition: background 0.4s ease;
             pointer-events: none;
         }
 
         .media-container:hover .media-overlay {
-            background: rgba(0,0,0,0.15);
+            background: rgba(0,0,0,0.05);
         }
 
         /* --- FOOTER --- */
@@ -391,9 +374,14 @@
             .intro h1 { font-size: 1.75rem; }
             .project-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             .project-meta { text-align: left; }
-            .work-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .media-container:first-child { grid-column: 1; height: 260px; }
-            .media-container:not(:first-child) { aspect-ratio: 3/2; }
+            
+            .work-grid { 
+                grid-template-columns: 1fr; 
+                gap: 2.5rem; 
+            }
+            .work-grid .media-container:first-child { 
+                grid-column: 1; 
+            }
             footer { flex-direction: column; gap: 0.5rem; text-align: left; padding: 2rem 1.5rem; }
         }
     </style>
@@ -445,69 +433,40 @@
 
         <section class="work-grid" id="work-grid">
 
-            <div class="media-container">
+            <!-- Clicking opens asset natively in a new tab -->
+            <a href="assets/top-image.jpg" target="_blank" class="media-container">
                 <img src="assets/top-image.jpg" alt="Nike Architecture — Hero">
                 <div class="media-overlay"></div>
-            </div>
+            </a>
 
-            <div class="media-container">
+            <a href="assets/second-image.jpg" target="_blank" class="media-container">
                 <img src="assets/second-image.jpg" alt="Second Work" loading="lazy">
                 <div class="media-overlay"></div>
-            </div>
+            </a>
 
-            <div class="media-container">
+            <a href="assets/video1.mp4" target="_blank" class="media-container">
                 <video autoplay loop muted playsinline poster="assets/video1-poster.jpg">
                     <source src="assets/video1.mp4" type="video/mp4">
                 </video>
                 <div class="media-overlay"></div>
-            </div>
+            </a>
 
-            <div class="media-container">
+            <a href="assets/video2.mp4" target="_blank" class="media-container">
                 <video autoplay loop muted playsinline poster="assets/video2-poster.jpg">
                     <source src="assets/video2.mp4" type="video/mp4">
                 </video>
                 <div class="media-overlay"></div>
-            </div>
+            </a>
 
-            <div class="media-container">
+            <a href="assets/image1.jpg" target="_blank" class="media-container">
                 <img src="assets/image1.jpg" alt="Design Work 1" loading="lazy">
                 <div class="media-overlay"></div>
-            </div>
+            </a>
 
-            <div class="media-container">
+            <a href="assets/image2.jpg" target="_blank" class="media-container">
                 <img src="assets/image2.jpg" alt="Design Work 2" loading="lazy">
                 <div class="media-overlay"></div>
-            </div>
-
-            <div class="media-container">
-                <img src="assets/image3.jpg" alt="Design Work 3" loading="lazy">
-                <div class="media-overlay"></div>
-            </div>
-
-            <div class="media-container">
-                <img src="assets/image4.jpg" alt="Design Work 4" loading="lazy">
-                <div class="media-overlay"></div>
-            </div>
-
-            <div class="media-container">
-                <img src="assets/image5.jpg" alt="Design Work 5" loading="lazy">
-                <div class="media-overlay"></div>
-            </div>
-
-            <div class="media-container">
-                <img src="assets/image6.jpg" alt="Design Work 6" loading="lazy">
-                <div class="media-overlay"></div>
-            </div>
-
-            <div class="media-container">
-                <img src="assets/image7.jpg" alt="Design Work 7" loading="lazy">
-                <div class="media-overlay"></div>
-            </div>
-
-            <div class="media-container">
-                <img src="assets/image8.jpg" alt="Design Work 8" loading="lazy">
-                <div class="media-overlay"></div>
-            </div>
+            </a>
 
         </section>
 
@@ -520,7 +479,6 @@
 
     <script>
         /* ---- CUSTOM CURSOR ---- */
-        // Check if device supports hover/fine pointer before running cursor logic
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.getElementById('cursor');
             const ring   = document.getElementById('cursor-ring');
@@ -561,20 +519,18 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    // Stop observing once revealed to improve performance
                     observer.unobserve(entry.target); 
                 }
             });
-        }, { threshold: 0.08 });
+        }, { threshold: 0.05 });
 
         document.querySelectorAll('.media-container').forEach(el => observer.observe(el));
 
-        /* ---- PARALLAX on hero item (Refined using CSS Variables) ---- */
+        /* ---- PARALLAX EFFECT ---- */
         const hero = document.querySelector('.work-grid .media-container:first-child img, .work-grid .media-container:first-child video');
         if (hero) {
             window.addEventListener('scroll', () => {
                 const scrollY = window.scrollY;
-                // Sets a CSS variable, allowing CSS to combine this with hover states seamlessly
                 hero.style.setProperty('--scroll-y', `${scrollY * 0.05}px`);
             }, { passive: true });
         }
