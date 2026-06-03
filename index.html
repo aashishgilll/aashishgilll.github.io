@@ -5,240 +5,416 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aashish Gill | Creative Director</title>
     <style>
-        /* --- RESET & BASICS --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --easing: cubic-bezier(0.16, 1, 0.3, 1);
+            --speed: 0.7s;
         }
 
-        ::selection {
-            background: #000;
-            color: #fff;
-        }
+        ::selection { background: #000; color: #fff; }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            background-color: #ffffff; /* Fallback color */
-            color: #000000;
-            /* Default Serif for body text */
-            font-family: "Times New Roman", Times, Baskerville, Georgia, serif;
-            font-size: 18px; 
+            background-color: #f5f4f0;
+            color: #000;
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-size: 18px;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-            opacity: 0; 
-            animation: fadeInPage 1.2s ease forwards;
-            overflow-x: hidden; /* Prevents horizontal scroll */
+            overflow-x: hidden;
         }
 
-        @keyframes fadeInPage {
-            to { opacity: 1; }
-        }
-
-        a { text-decoration: none; color: #000; transition: opacity 0.3s; }
-        a:hover { opacity: 0.5; }
-
-        /* --- BACKGROUND VIDEO LOOP --- */
+        /* --- BACKGROUND VIDEO --- */
         .video-bg-fixed {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; /* Puts video BEHIND everything */
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -2; /* Pushed further back */
             overflow: hidden;
         }
-        
-        .video-bg-fixed video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures video covers screen without stretching */
-            opacity: 0.8; /* Slight transparency so it's not too overwhelming */
+        .video-bg-fixed::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(245,244,240,0.55);
         }
+        .video-bg-fixed video {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- NOISE OVERLAY --- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1; /* Moved behind content to prevent stacking bugs */
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px;
+        }
+
+        /* --- CUSTOM CURSOR (Wrapped in a11y & pointer media queries) --- */
+        #cursor, #cursor-ring { display: none; } /* Default hidden for touch/screen-readers */
+
+        @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+            body { cursor: none; }
+            a { cursor: none; }
+            
+            #cursor {
+                display: block;
+                position: fixed;
+                width: 10px;
+                height: 10px;
+                background: #000;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.2s var(--easing), height 0.2s var(--easing), background 0.2s;
+                mix-blend-mode: difference;
+            }
+
+            #cursor-ring {
+                display: block;
+                position: fixed;
+                width: 36px;
+                height: 36px;
+                border: 1px solid rgba(0,0,0,0.4);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9998;
+                transform: translate(-50%, -50%);
+                transition: width 0.4s var(--easing), height 0.4s var(--easing), border-color 0.3s;
+            }
+
+            body.hovering #cursor { width: 6px; height: 6px; }
+            body.hovering #cursor-ring { width: 56px; height: 56px; border-color: rgba(0,0,0,0.2); }
+            body.clicking #cursor { width: 14px; height: 14px; }
+        }
+
+        a { text-decoration: none; color: #000; }
 
         /* --- HEADER --- */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2.5rem 5%;
+            padding: 2rem 5%;
             position: fixed;
             top: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.98); /* Keeps header readable */
             z-index: 100;
+            transition: background 0.5s ease, backdrop-filter 0.5s ease;
         }
 
-        /* NAME: Sans Serif */
+        header.scrolled {
+            background: rgba(245,244,240,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
         .brand-name {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 1.5rem;
+            font-size: 1rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: -0.03em;
+            letter-spacing: 0.12em;
+            opacity: 0;
+            animation: fadeUp 1s var(--easing) 0.2s forwards;
         }
 
-        /* ICONS Navigation */
-        nav ul {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
+        nav ul { list-style: none; display: flex; align-items: center; gap: 1.5rem; }
+
+        nav li {
+            opacity: 0;
+            animation: fadeUp 1s var(--easing) 0.4s forwards;
         }
 
-        /* SVG Icon sizing */
+        .nav-link {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: opacity 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 1px;
+            background: #000;
+            transition: width 0.4s var(--easing);
+        }
+        .nav-link:hover::after { width: 100%; }
+
         .icon {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-            display: block;
+            width: 22px; height: 22px;
+            fill: currentColor; display: block;
+            transition: opacity 0.3s, transform 0.3s;
         }
+        a:hover .icon { opacity: 0.5; transform: scale(0.9); }
 
-        /* --- MAIN LAYOUT --- */
+        /* --- MAIN --- */
         main {
-            padding-top: 25vh;
+            padding-top: 28vh;
             width: 90%;
-            max-width: 1100px; /* Expanded slightly to give side-by-side items room to breathe */
+            max-width: 1140px;
             margin: 0 auto;
         }
 
-        /* --- INTRO SECTION --- */
+        /* --- INTRO --- */
         .intro {
-            margin-bottom: 6rem;
-            text-align: left;
+            margin-bottom: 8rem;
+        }
+
+        .intro-eyebrow {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.4);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s var(--easing) 0.3s forwards;
         }
 
         .intro h1 {
-            font-size: 3rem; 
+            font-size: clamp(2rem, 4vw, 3.4rem);
             font-weight: normal;
-            line-height: 1.15;
-            max-width: 750px;
-            letter-spacing: -0.02em;
+            line-height: 1.18;
+            max-width: 780px;
+            letter-spacing: -0.025em;
+            opacity: 0;
+            animation: fadeUp 1s var(--easing) 0.5s forwards;
         }
 
-        /* --- TITLE: NIKE ARCHITECTURE --- */
+        .intro h1 em {
+            font-style: italic;
+            opacity: 0.5;
+        }
+
+        .scroll-hint {
+            margin-top: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            animation: fadeUp 1s var(--easing) 1s forwards;
+        }
+        .scroll-hint span {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.35);
+        }
+        .scroll-line {
+            width: 40px; height: 1px;
+            background: rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            left: -100%; top: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            animation: lineScroll 2s ease-in-out 1.5s infinite;
+        }
+        @keyframes lineScroll {
+            0% { left: -100%; }
+            50% { left: 0%; }
+            100% { left: 100%; }
+        }
+
+        /* --- PROJECT HEADER --- */
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.12);
+        }
+
         .separator-title {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-weight: 700; /* Bold */
-            font-size: 2rem; /* Big */
+            font-weight: 700;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            margin-bottom: 3rem; 
-            white-space: nowrap; 
         }
 
-        /* --- TWO-COLUMN WORK GRID --- */
+        .project-meta {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.35);
+            text-align: right;
+        }
+
+        /* --- WORK GRID --- */
         .work-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Creates side-by-side rows */
-            gap: 4rem 3rem; /* Row gap, Column gap */
-            padding-bottom: 6rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem 2rem;
+            padding-bottom: 8rem;
+        }
+
+        .work-grid .media-container:first-child {
+            grid-column: 1 / -1;
+            height: 520px;
         }
 
         .media-container {
             width: 100%;
-            display: flex;
-            justify-content: center;
             position: relative;
+            overflow: hidden;
+            background: rgba(0,0,0,0.04);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s var(--easing), transform 0.9s var(--easing);
         }
 
-        /* Images & Videos shared styles */
-        .media-container img, 
+        .media-container:not(:first-child) {
+            aspect-ratio: 4/3;
+        }
+
+        .media-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered delay per child */
+        .media-container:nth-child(2) { transition-delay: 0.1s; }
+        .media-container:nth-child(3) { transition-delay: 0.05s; }
+        .media-container:nth-child(4) { transition-delay: 0.15s; }
+        .media-container:nth-child(5) { transition-delay: 0.08s; }
+        .media-container:nth-child(6) { transition-delay: 0.18s; }
+        .media-container:nth-child(7) { transition-delay: 0.06s; }
+        .media-container:nth-child(8) { transition-delay: 0.14s; }
+        .media-container:nth-child(9) { transition-delay: 0.09s; }
+        .media-container:nth-child(10) { transition-delay: 0.16s; }
+        .media-container:nth-child(11) { transition-delay: 0.04s; }
+        .media-container:nth-child(12) { transition-delay: 0.12s; }
+
+        .media-container img,
         .media-container video {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             display: block;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: transform 0.4s ease;
+            transform: scale(1.0);
+            transition: transform 0.8s var(--easing);
         }
-        
-        /* Hover Effect */
-        .media-container img:hover,
-        .media-container video:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+
+        /* Fix Parallax/Hover conflict using CSS variables */
+        .media-container:first-child img,
+        .media-container:first-child video {
+            transform: scale(1.0) translateY(var(--scroll-y, 0px));
+        }
+
+        .media-container:hover img,
+        .media-container:hover video {
+            transform: scale(1.04);
+        }
+
+        .media-container:first-child:hover img,
+        .media-container:first-child:hover video {
+            transform: scale(1.04) translateY(var(--scroll-y, 0px));
+        }
+
+        /* Overlay label on hover */
+        .media-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            transition: background 0.4s ease;
+            pointer-events: none;
+        }
+
+        .media-container:hover .media-overlay {
+            background: rgba(0,0,0,0.15);
         }
 
         /* --- FOOTER --- */
         footer {
             display: flex;
             justify-content: space-between;
-            padding: 4rem 5%;
-            font-size: 0.8rem;
-            border-top: 1px solid #eaeaea;
-            margin-top: 5rem;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #666;
-            background: rgba(255,255,255,0.9); /* Readable footer */
+            align-items: center;
+            padding: 2.5rem 5%;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            background: rgba(245,244,240,0.95);
+            backdrop-filter: blur(8px);
         }
 
-        /* --- MOBILE OPTIMIZATIONS --- */
+        .footer-left {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(0,0,0,0.4);
+        }
+
+        .footer-right {
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: rgba(0,0,0,0.35);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
-            header {
-                padding: 1.5rem 1.5rem; 
-            }
-
-            .brand-name {
-                font-size: 1.2rem; 
-            }
-
-            main {
-                padding-top: 18vh;
-                width: 90%;
-            }
-
-            .intro {
-                margin-bottom: 4rem; 
-            }
-
-            .intro h1 {
-                font-size: 1.8rem; 
-            }
-
-            .separator-title {
-                font-size: 1.4rem; 
-                margin-bottom: 2rem;
-            }
-
-            /* Switches back to a single column on mobile frames */
-            .work-grid {
-                grid-template-columns: 1fr;
-                gap: 3rem; 
-            }
-
-            nav ul {
-                gap: 1rem;
-            }
-            
-            .icon {
-                width: 20px; 
-                height: 20px;
-            }
-
-            footer {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: left;
-                padding: 2rem 1.5rem;
-            }
+            header { padding: 1.5rem; }
+            .brand-name { font-size: 0.9rem; }
+            main { padding-top: 18vh; width: 92%; }
+            .intro { margin-bottom: 5rem; }
+            .intro h1 { font-size: 1.75rem; }
+            .project-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .project-meta { text-align: left; }
+            .work-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .media-container:first-child { grid-column: 1; height: 260px; }
+            .media-container:not(:first-child) { aspect-ratio: 3/2; }
+            footer { flex-direction: column; gap: 0.5rem; text-align: left; padding: 2rem 1.5rem; }
         }
     </style>
 </head>
 <body>
 
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+
     <div class="video-bg-fixed">
-        <video autoplay loop muted playsinline>
+        <video autoplay loop muted playsinline poster="assets/background-poster.jpg">
             <source src="assets/background-loop.mp4" type="video/mp4">
         </video>
     </div>
 
-    <header>
+    <header id="site-header">
         <div class="brand-name">Aashish Gill</div>
         <nav>
             <ul>
                 <li>
-                    <a href="mailto:gillaashishh@gmail.com" aria-label="Email Me">
+                    <a href="mailto:gillaashishh@gmail.com" class="nav-link" aria-label="Email Me">
                         <svg class="icon" viewBox="0 0 24 24">
                             <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                         </svg>
@@ -249,67 +425,88 @@
     </header>
 
     <main>
-        
+
         <section class="intro">
-            <h1>New Delhi based creative director and designer working across film, digital design and visual storytelling.</h1>
+            <p class="intro-eyebrow">Creative Direction &amp; Design</p>
+            <h1>New Delhi based creative director and designer working across film, <em>digital design</em> and visual storytelling.</h1>
+            <div class="scroll-hint">
+                <div class="scroll-line"></div>
+                <span>Selected Works</span>
+            </div>
         </section>
 
-        <div class="separator-title">"NIKE ARCHITECTURE"</div>
+        <div class="project-header">
+            <div class="separator-title">"Nike Architecture"</div>
+            <div class="project-meta">
+                2026<br>
+                Brand Campaign
+            </div>
+        </div>
 
-        <section class="work-grid">
+        <section class="work-grid" id="work-grid">
 
             <div class="media-container">
-                <img src="assets/top-image.jpg" alt="Nike Architecture">
+                <img src="assets/top-image.jpg" alt="Nike Architecture — Hero">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <img src="assets/second-image.jpg" alt="Second Work">
+                <img src="assets/second-image.jpg" alt="Second Work" loading="lazy">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <video autoplay loop muted playsinline>
+                <video autoplay loop muted playsinline poster="assets/video1-poster.jpg">
                     <source src="assets/video1.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
                 </video>
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <video autoplay loop muted playsinline>
+                <video autoplay loop muted playsinline poster="assets/video2-poster.jpg">
                     <source src="assets/video2.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
                 </video>
-            </div>
-            
-            <div class="media-container">
-                <img src="assets/image1.jpg" alt="Design Work 1">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <img src="assets/image2.jpg" alt="Design Work 2">
+                <img src="assets/image1.jpg" alt="Design Work 1" loading="lazy">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <img src="assets/image3.jpg" alt="Design Work 3">
+                <img src="assets/image2.jpg" alt="Design Work 2" loading="lazy">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <img src="assets/image4.jpg" alt="Design Work 4">
+                <img src="assets/image3.jpg" alt="Design Work 3" loading="lazy">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <img src="assets/image5.jpg" alt="Design Work 5">
+                <img src="assets/image4.jpg" alt="Design Work 4" loading="lazy">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <img src="assets/image6.jpg" alt="Design Work 6">
+                <img src="assets/image5.jpg" alt="Design Work 5" loading="lazy">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <img src="assets/image7.jpg" alt="Design Work 7">
+                <img src="assets/image6.jpg" alt="Design Work 6" loading="lazy">
+                <div class="media-overlay"></div>
             </div>
 
             <div class="media-container">
-                <img src="assets/image8.jpg" alt="Design Work 8">
+                <img src="assets/image7.jpg" alt="Design Work 7" loading="lazy">
+                <div class="media-overlay"></div>
+            </div>
+
+            <div class="media-container">
+                <img src="assets/image8.jpg" alt="Design Work 8" loading="lazy">
+                <div class="media-overlay"></div>
             </div>
 
         </section>
@@ -317,9 +514,71 @@
     </main>
 
     <footer>
-        <div>&copy; 2026 Aashish Gill</div>
-        <div>New Delhi, India</div>
+        <div class="footer-left">&copy; 2026 Aashish Gill &nbsp;·&nbsp; New Delhi, India</div>
+        <div class="footer-right">gillaashishh@gmail.com</div>
     </footer>
+
+    <script>
+        /* ---- CUSTOM CURSOR ---- */
+        // Check if device supports hover/fine pointer before running cursor logic
+        if (window.matchMedia("(pointer: fine)").matches) {
+            const cursor = document.getElementById('cursor');
+            const ring   = document.getElementById('cursor-ring');
+            let mx = 0, my = 0, rx = 0, ry = 0;
+
+            document.addEventListener('mousemove', e => {
+                mx = e.clientX; my = e.clientY;
+                cursor.style.left = mx + 'px';
+                cursor.style.top  = my + 'px';
+            });
+
+            function animateRing() {
+                rx += (mx - rx) * 0.12;
+                ry += (my - ry) * 0.12;
+                ring.style.left = rx + 'px';
+                ring.style.top  = ry + 'px';
+                requestAnimationFrame(animateRing);
+            }
+            animateRing();
+
+            document.querySelectorAll('a, .media-container').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+
+            document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
+            document.addEventListener('mouseup',   () => document.body.classList.remove('clicking'));
+        }
+
+        /* ---- HEADER SCROLL ---- */
+        const header = document.getElementById('site-header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+
+        /* ---- SCROLL REVEAL ---- */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Stop observing once revealed to improve performance
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.media-container').forEach(el => observer.observe(el));
+
+        /* ---- PARALLAX on hero item (Refined using CSS Variables) ---- */
+        const hero = document.querySelector('.work-grid .media-container:first-child img, .work-grid .media-container:first-child video');
+        if (hero) {
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                // Sets a CSS variable, allowing CSS to combine this with hover states seamlessly
+                hero.style.setProperty('--scroll-y', `${scrollY * 0.05}px`);
+            }, { passive: true });
+        }
+    </script>
 
 </body>
 </html>
