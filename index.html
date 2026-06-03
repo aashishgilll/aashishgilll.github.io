@@ -10,6 +10,9 @@
         :root {
             --easing: cubic-bezier(0.16, 1, 0.3, 1);
             --speed: 0.7s;
+            --cursor-grad: radial-gradient(circle, #ff416c 0%, #ff4b2b 100%);
+            --cursor-ring-color: rgba(255, 65, 108, 0.4);
+            --cursor-ring-hover: rgba(255, 65, 108, 0.15);
         }
 
         ::selection { background: #000; color: #fff; }
@@ -58,7 +61,7 @@
             background-size: 200px 200px;
         }
 
-        /* --- CUSTOM CURSOR --- */
+        /* --- CUSTOM GRADIENT CURSOR --- */
         #cursor, #cursor-ring { display: none; }
 
         @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
@@ -68,23 +71,22 @@
             #cursor {
                 display: block;
                 position: fixed;
-                width: 10px;
-                height: 10px;
-                background: #000;
+                width: 12px;
+                height: 12px;
+                background: var(--cursor-grad);
                 border-radius: 50%;
                 pointer-events: none;
                 z-index: 9999;
                 transform: translate(-50%, -50%);
-                transition: width 0.2s var(--easing), height 0.2s var(--easing), background 0.2s;
-                mix-blend-mode: difference;
+                transition: width 0.2s var(--easing), height 0.2s var(--easing);
             }
 
             #cursor-ring {
                 display: block;
                 position: fixed;
-                width: 36px;
-                height: 36px;
-                border: 1px solid rgba(0,0,0,0.4);
+                width: 38px;
+                height: 38px;
+                border: 1.5px solid var(--cursor-ring-color);
                 border-radius: 50%;
                 pointer-events: none;
                 z-index: 9998;
@@ -93,16 +95,16 @@
             }
 
             body.hovering #cursor { width: 6px; height: 6px; }
-            body.hovering #cursor-ring { width: 56px; height: 56px; border-color: rgba(0,0,0,0.2); }
-            body.clicking #cursor { width: 14px; height: 14px; }
+            body.hovering #cursor-ring { width: 58px; height: 58px; border-color: var(--cursor-ring-hover); background: rgba(255, 65, 108, 0.03); }
+            body.clicking #cursor { width: 18px; height: 18px; }
         }
 
         a { text-decoration: none; color: #000; }
 
         /* --- HEADER --- */
         header {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             padding: 2rem 5%;
             position: fixed;
@@ -125,35 +127,36 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.12em;
+            justify-self: start;
             opacity: 0;
             animation: fadeUp 1s var(--easing) 0.2s forwards;
         }
 
-        nav ul { list-style: none; display: flex; align-items: center; gap: 1.5rem; }
+        /* Centered Logo container */
+        .header-logo {
+            justify-self: center;
+            opacity: 0;
+            animation: fadeUp 1s var(--easing) 0.3s forwards;
+            display: flex;
+            align-items: center;
+        }
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+
+        nav {
+            justify-self: end;
+        }
+        nav ul { list-style: none; display: flex; align-items: center; }
 
         nav li {
             opacity: 0;
             animation: fadeUp 1s var(--easing) 0.4s forwards;
         }
-
-        .nav-link {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 0.5rem 0;
-            position: relative;
-            transition: opacity 0.3s;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 1px;
-            background: #000;
-            transition: width 0.4s var(--easing);
-        }
-        .nav-link:hover::after { width: 100%; }
 
         .icon {
             width: 22px; height: 22px;
@@ -288,7 +291,7 @@
             transform: translateY(0);
         }
 
-        /* Restored stagger delays for all 12 items */
+        /* Stagger delays for items (1-17) */
         .media-container:nth-child(2) { transition-delay: 0.05s; }
         .media-container:nth-child(3) { transition-delay: 0.12s; }
         .media-container:nth-child(4) { transition-delay: 0.08s; }
@@ -300,6 +303,11 @@
         .media-container:nth-child(10) { transition-delay: 0.04s; }
         .media-container:nth-child(11) { transition-delay: 0.11s; }
         .media-container:nth-child(12) { transition-delay: 0.07s; }
+        .media-container:nth-child(13) { transition-delay: 0.13s; }
+        .media-container:nth-child(14) { transition-delay: 0.05s; }
+        .media-container:nth-child(15) { transition-delay: 0.10s; }
+        .media-container:nth-child(16) { transition-delay: 0.08s; }
+        .media-container:nth-child(17) { transition-delay: 0.17s; }
 
         .media-container img,
         .media-container video {
@@ -378,7 +386,11 @@
 
         /* --- MOBILE --- */
         @media (max-width: 768px) {
-            header { padding: 1.5rem; }
+            header { 
+                grid-template-columns: 1fr auto;
+                padding: 1.5rem; 
+            }
+            .header-logo { display: none; } /* Clear aesthetic scaling for constrained spaces */
             .brand-name { font-size: 0.9rem; }
             main { padding-top: 18vh; width: 92%; }
             .intro { margin-bottom: 5rem; }
@@ -410,6 +422,16 @@
 
     <header id="site-header">
         <div class="brand-name">Aashish Gill</div>
+        
+        <!-- Center Geometric Logo -->
+        <div class="header-logo">
+            <svg class="logo-icon" viewBox="0 0 100 100">
+                <line x1="50" y1="15" x2="50" y2="85" />
+                <line x1="15" y1="50" x2="85" y2="50" />
+                <circle cx="50" cy="50" r="6" fill="currentColor"/>
+            </svg>
+        </div>
+
         <nav>
             <ul>
                 <li>
@@ -444,16 +466,19 @@
 
         <section class="work-grid" id="work-grid">
 
+            <!-- 1. Hero / Main Campaign Image -->
             <a href="assets/top-image.jpg" target="_blank" class="media-container">
                 <img src="assets/top-image.jpg" alt="Nike Architecture — Hero Blueprint">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 2. Supporting Image -->
             <a href="assets/second-image.jpg" target="_blank" class="media-container">
                 <img src="assets/second-image.jpg" alt="Campaign Context Layout" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 3. Campaign Video Loop 1 -->
             <a href="assets/video1.mp4" target="_blank" class="media-container">
                 <video autoplay loop muted playsinline poster="assets/video1-poster.jpg">
                     <source src="assets/video1.mp4" type="video/mp4">
@@ -461,6 +486,7 @@
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 4. Campaign Video Loop 2 -->
             <a href="assets/video2.mp4" target="_blank" class="media-container">
                 <video autoplay loop muted playsinline poster="assets/video2-poster.jpg">
                     <source src="assets/video2.mp4" type="video/mp4">
@@ -468,43 +494,81 @@
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 5. Poster / Project Asset 1 -->
             <a href="assets/image1.jpg" target="_blank" class="media-container">
                 <img src="assets/image1.jpg" alt="Poster Exhibit Alpha" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 6. Poster / Project Asset 2 -->
             <a href="assets/image2.jpg" target="_blank" class="media-container">
                 <img src="assets/image2.jpg" alt="Poster Exhibit Beta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 7. Poster / Project Asset 3 -->
             <a href="assets/image3.jpg" target="_blank" class="media-container">
                 <img src="assets/image3.jpg" alt="Poster Exhibit Gamma" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 8. Poster / Project Asset 4 -->
             <a href="assets/image4.jpg" target="_blank" class="media-container">
                 <img src="assets/image4.jpg" alt="Poster Exhibit Delta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 9. Poster / Project Asset 5 -->
             <a href="assets/image5.jpg" target="_blank" class="media-container">
                 <img src="assets/image5.jpg" alt="Poster Exhibit Epsilon" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 10. Poster / Project Asset 6 -->
             <a href="assets/image6.jpg" target="_blank" class="media-container">
                 <img src="assets/image6.jpg" alt="Poster Exhibit Zeta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 11. Poster / Project Asset 7 -->
             <a href="assets/image7.jpg" target="_blank" class="media-container">
                 <img src="assets/image7.jpg" alt="Poster Exhibit Eta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 12. Poster / Project Asset 8 -->
             <a href="assets/image8.jpg" target="_blank" class="media-container">
                 <img src="assets/image8.jpg" alt="Poster Exhibit Theta" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 13. Added Poster / Project Asset 9 -->
+            <a href="assets/image9.jpg" target="_blank" class="media-container">
+                <img src="assets/image9.jpg" alt="Poster Exhibit Iota" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 14. Added Poster / Project Asset 10 -->
+            <a href="assets/image10.jpg" target="_blank" class="media-container">
+                <img src="assets/image10.jpg" alt="Poster Exhibit Kappa" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 15. Added Poster / Project Asset 11 -->
+            <a href="assets/image11.jpg" target="_blank" class="media-container">
+                <img src="assets/image11.jpg" alt="Poster Exhibit Lambda" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 16. Added Poster / Project Asset 12 -->
+            <a href="assets/image12.jpg" target="_blank" class="media-container">
+                <img src="assets/image12.jpg" alt="Poster Exhibit Mu" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 17. Added Poster / Project Asset 13 -->
+            <a href="assets/image13.jpg" target="_blank" class="media-container">
+                <img src="assets/image13.jpg" alt="Poster Exhibit Nu" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
@@ -518,7 +582,7 @@
     </footer>
 
     <script>
-        /* ---- CUSTOM CURSOR ---- */
+        /* ---- CUSTOM CURSOR WITH RED GRADIENT ---- */
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.getElementById('cursor');
             const ring   = document.getElementById('cursor-ring');
