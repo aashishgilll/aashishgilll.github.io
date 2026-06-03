@@ -387,11 +387,21 @@
         /* --- MOBILE --- */
         @media (max-width: 768px) {
             header { 
-                grid-template-columns: 1fr auto;
-                padding: 1.5rem; 
+                grid-template-columns: auto 1fr auto; /* Sets explicit three columns on mobile */
+                padding: 1rem 5%; 
             }
-            .header-logo { display: none; } /* Clear aesthetic scaling for constrained spaces */
-            .brand-name { font-size: 0.9rem; }
+            .brand-name { 
+                font-size: 0.85rem; 
+            }
+            .header-logo { 
+                display: flex; /* Ensures logo stays visible */
+                justify-self: center;
+            }
+            .logo-icon {
+                width: 22px; /* Responsive scale down for mobile viewports */
+                height: 22px;
+            }
+            
             main { padding-top: 18vh; width: 92%; }
             .intro { margin-bottom: 5rem; }
             .intro h1 { font-size: 1.75rem; }
@@ -542,31 +552,31 @@
                 <div class="media-overlay"></div>
             </a>
 
-            <!-- 13. Added Poster / Project Asset 9 -->
-            <a href="assets/image9.jpg" target="_blank" class="media-container">
-                <img src="assets/image9.jpg" alt="Poster Exhibit Iota" loading="lazy">
+            <!-- 13. Added Poster / Project Asset 9 (PNG Fix) -->
+            <a href="assets/image9.png" target="_blank" class="media-container">
+                <img src="assets/image9.png" alt="Poster Exhibit Iota" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
-            <!-- 14. Added Poster / Project Asset 10 -->
-            <a href="assets/image10.jpg" target="_blank" class="media-container">
-                <img src="assets/image10.jpg" alt="Poster Exhibit Kappa" loading="lazy">
+            <!-- 14. Added Poster / Project Asset 10 (PNG Fix) -->
+            <a href="assets/image10.png" target="_blank" class="media-container">
+                <img src="assets/image10.png" alt="Poster Exhibit Kappa" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
-            <!-- 15. Added Poster / Project Asset 11 -->
-            <a href="assets/image11.jpg" target="_blank" class="media-container">
-                <img src="assets/image11.jpg" alt="Poster Exhibit Lambda" loading="lazy">
+            <!-- 15. Added Poster / Project Asset 11 (PNG Fix) -->
+            <a href="assets/image11.png" target="_blank" class="media-container">
+                <img src="assets/image11.png" alt="Poster Exhibit Lambda" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
-            <!-- 16. Added Poster / Project Asset 12 -->
-            <a href="assets/image12.jpg" target="_blank" class="media-container">
-                <img src="assets/image12.jpg" alt="Poster Exhibit Mu" loading="lazy">
+            <!-- 16. Added Poster / Project Asset 12 (PNG Fix) -->
+            <a href="assets/image12.png" target="_blank" class="media-container">
+                <img src="assets/image12.png" alt="Poster Exhibit Mu" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
-            <!-- 17. Added Poster / Project Asset 13 -->
+            <!-- 17. Added Poster / Project Asset 13 (Remains JPG) -->
             <a href="assets/image13.jpg" target="_blank" class="media-container">
                 <img src="assets/image13.jpg" alt="Poster Exhibit Nu" loading="lazy">
                 <div class="media-overlay"></div>
