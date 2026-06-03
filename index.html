@@ -264,8 +264,7 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 4rem 3rem;
             padding-bottom: 8rem;
-            /* FIX: Prevents items from stretching to match row height, enabling mixed layouts */
-            align-items: start; 
+            align-items: start; /* Keeps vertical and horizontal items perfectly proportioned side-by-side */
         }
 
         .media-container {
@@ -279,7 +278,7 @@
             transition: opacity 0.9s var(--easing), transform 0.9s var(--easing);
         }
 
-        /* Full width breakout for main editorial content */
+        /* Full width breakout for hero image */
         .work-grid .media-container:first-child {
             grid-column: 1 / -1;
         }
@@ -289,23 +288,29 @@
             transform: translateY(0);
         }
 
-        /* Animation delays */
+        /* Restored stagger delays for all 12 items */
         .media-container:nth-child(2) { transition-delay: 0.05s; }
         .media-container:nth-child(3) { transition-delay: 0.12s; }
         .media-container:nth-child(4) { transition-delay: 0.08s; }
         .media-container:nth-child(5) { transition-delay: 0.15s; }
+        .media-container:nth-child(6) { transition-delay: 0.06s; }
+        .media-container:nth-child(7) { transition-delay: 0.14s; }
+        .media-container:nth-child(8) { transition-delay: 0.09s; }
+        .media-container:nth-child(9) { transition-delay: 0.16s; }
+        .media-container:nth-child(10) { transition-delay: 0.04s; }
+        .media-container:nth-child(11) { transition-delay: 0.11s; }
+        .media-container:nth-child(12) { transition-delay: 0.07s; }
 
-        /* FIX: Changed height from 100% to auto to display 18x24 dimensions entirely */
         .media-container img,
         .media-container video {
             width: 100%;
-            height: auto; 
+            height: auto; /* Crucial: lets your 18x24 posters render their natural heights completely uncropped */
             display: block;
             transform: scale(1.0);
             transition: transform 0.8s var(--easing);
         }
 
-        /* Parallax effect variables safely calculated */
+        /* Parallax variables */
         .work-grid .media-container:first-child img,
         .work-grid .media-container:first-child video {
             transform: scale(1.0) translateY(var(--scroll-y, 0px));
@@ -433,17 +438,19 @@
 
         <section class="work-grid" id="work-grid">
 
-            <!-- Clicking opens asset natively in a new tab -->
+            <!-- 1. Hero / Main Campaign Image -->
             <a href="assets/top-image.jpg" target="_blank" class="media-container">
-                <img src="assets/top-image.jpg" alt="Nike Architecture — Hero">
+                <img src="assets/top-image.jpg" alt="Nike Architecture — Hero Blueprint">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 2. Supporting Image -->
             <a href="assets/second-image.jpg" target="_blank" class="media-container">
-                <img src="assets/second-image.jpg" alt="Second Work" loading="lazy">
+                <img src="assets/second-image.jpg" alt="Campaign Context Layout" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 3. Campaign Video Loop 1 -->
             <a href="assets/video1.mp4" target="_blank" class="media-container">
                 <video autoplay loop muted playsinline poster="assets/video1-poster.jpg">
                     <source src="assets/video1.mp4" type="video/mp4">
@@ -451,6 +458,7 @@
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 4. Campaign Video Loop 2 -->
             <a href="assets/video2.mp4" target="_blank" class="media-container">
                 <video autoplay loop muted playsinline poster="assets/video2-poster.jpg">
                     <source src="assets/video2.mp4" type="video/mp4">
@@ -458,13 +466,51 @@
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 5. Poster / Project Asset 1 (18x24 print ready format) -->
             <a href="assets/image1.jpg" target="_blank" class="media-container">
-                <img src="assets/image1.jpg" alt="Design Work 1" loading="lazy">
+                <img src="assets/image1.jpg" alt="Poster Exhibit Alpha" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
+            <!-- 6. Poster / Project Asset 2 -->
             <a href="assets/image2.jpg" target="_blank" class="media-container">
-                <img src="assets/image2.jpg" alt="Design Work 2" loading="lazy">
+                <img src="assets/image2.jpg" alt="Poster Exhibit Beta" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 7. Poster / Project Asset 3 -->
+            <a href="assets/image3.jpg" target="_blank" class="media-container">
+                <img src="assets/image3.jpg" alt="Poster Exhibit Gamma" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 8. Poster / Project Asset 4 -->
+            <a href="assets/image4.jpg" target="_blank" class="media-container">
+                <img src="assets/image4.jpg" alt="Poster Exhibit Delta" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 9. Poster / Project Asset 5 -->
+            <a href="assets/image5.jpg" target="_blank" class="media-container">
+                <img src="assets/image5.jpg" alt="Poster Exhibit Epsilon" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 10. Poster / Project Asset 6 -->
+            <a href="assets/image6.jpg" target="_blank" class="media-container">
+                <img src="assets/image6.jpg" alt="Poster Exhibit Zeta" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 11. Poster / Project Asset 7 -->
+            <a href="assets/image7.jpg" target="_blank" class="media-container">
+                <img src="assets/image7.jpg" alt="Poster Exhibit Eta" loading="lazy">
+                <div class="media-overlay"></div>
+            </a>
+
+            <!-- 12. Poster / Project Asset 8 -->
+            <a href="assets/image8.jpg" target="_blank" class="media-container">
+                <img src="assets/image8.jpg" alt="Poster Exhibit Theta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
 
