@@ -168,7 +168,6 @@
             transition: transform 0.4s var(--easing);
         }
 
-        /* Rotates the plus button slightly when the menu expands */
         body.menu-open .menu-trigger {
             transform: rotate(135deg);
         }
@@ -196,48 +195,28 @@
             right: 0;
         }
 
-        /* --- DRAWER LIST CONTENT --- */
-        .drawer-section-title {
+        .drawer-main-nav {
+            margin-top: 1rem;
+        }
+
+        /* "Logos" Single text link setup */
+        .logos-menu-btn {
+            background: none;
+            border: none;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 0.75rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: rgba(0, 0, 0, 0.4);
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            padding-bottom: 0.5rem;
-        }
-
-        .drawer-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
-        }
-
-        .drawer-list a {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 0.95rem;
-            letter-spacing: 0.02em;
-            color: rgba(0,0,0,0.85);
+            letter-spacing: 0.08em;
+            color: #000;
             display: inline-block;
             transition: opacity 0.2s, transform 0.2s;
+            text-align: left;
         }
 
-        .drawer-list a:hover {
+        .logos-menu-btn:hover {
             opacity: 0.5;
             transform: translateX(4px);
-        }
-
-        .exploration-divider {
-            font-family: "Times New Roman", Times, Georgia, serif;
-            font-style: italic;
-            font-size: 0.95rem;
-            color: rgba(0, 0, 0, 0.4);
-            margin: 1.5rem 0 0.5rem 0;
-            padding-top: 1rem;
-            border-top: 1px dashed rgba(0,0,0,0.1);
         }
 
         .drawer-footer-connect {
@@ -369,6 +348,19 @@
             text-transform: uppercase;
             color: rgba(0,0,0,0.35);
             text-align: right;
+        }
+
+        /* --- LOGO GALLERY SUBSECTION --- */
+        .logo-exploration-header {
+            grid-column: 1 / -1;
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            color: rgba(0,0,0,0.4);
+            margin: 4rem 0 1rem 0;
+            padding-top: 3rem;
+            border-top: 1px dashed rgba(0,0,0,0.15);
+            text-align: center;
         }
 
         /* --- WORK GRID --- */
@@ -531,6 +523,7 @@
             .work-grid .media-container:first-child { 
                 grid-column: 1; 
             }
+            .logo-exploration-header { margin: 2rem 0 0.5rem 0; padding-top: 1.5rem;}
             footer { flex-direction: column; gap: 0.5rem; text-align: left; padding: 2rem 1.5rem; }
         }
     </style>
@@ -547,7 +540,7 @@
     </div>
 
     <header id="site-header">
-        <div class="brand-name">Aashish Gill</div>
+        <div class="brand-name" style="cursor: pointer;" onclick="window.location.reload();">Aashish Gill</div>
         
         <!-- Center Geometric Logo -->
         <div class="header-logo">
@@ -569,19 +562,10 @@
 
     <!-- Slide Drawer Nav Structure -->
     <div class="nav-drawer" id="nav-drawer">
-        <div class="drawer-section-title">Logos</div>
-        <ul class="drawer-list">
-            <li><a href="assets/logo1.png" target="_blank">Logo 1</a></li>
-            <li><a href="assets/logo2.png" target="_blank">Logo 2</a></li>
-            
-            <li class="exploration-divider">Logo Explorations</li>
-            
-            <li><a href="assets/logo3.png" target="_blank">Logo 3</a></li>
-            <li><a href="assets/logo4.png" target="_blank">Logo 4</a></li>
-            <li><a href="assets/logo5.png" target="_blank">Logo 5</a></li>
-            <li><a href="assets/logo6.png" target="_blank">Logo 6</a></li>
-            <li><a href="assets/logo7.png" target="_blank">Logo 7</a></li>
-        </ul>
+        <div class="drawer-main-nav">
+            <!-- Simple clean text trigger to switch views -->
+            <button class="logos-menu-btn" id="logos-trigger">Logos</button>
+        </div>
 
         <div class="drawer-footer-connect">
             <span>Connect with me here</span>
@@ -591,16 +575,8 @@
 
     <main id="main-content">
 
-        <section class="intro">
-            <p class="intro-eyebrow">Creative Direction &amp; Design</p>
-            <h1>New Delhi based creative director and designer working across film, <em>digital design</em> and visual storytelling.</h1>
-            <div class="scroll-hint">
-                <div class="scroll-line"></div>
-                <span>Selected Works</span>
-            </div>
-        </section>
-
-        <div class="project-header">
+        <!-- This area stays dynamic. By default it shows Nike Campaign, changes to Logos view via JS -->
+        <div id="dynamic-project-title" class="project-header">
             <div class="separator-title">"Nike Architecture"</div>
             <div class="project-meta">
                 2026<br>
@@ -728,7 +704,9 @@
     <script>
         /* ---- NAVIGATION MENU INTERACTION ---- */
         const menuToggle = document.getElementById('menu-toggle');
-        const mainContent = document.getElementById('main-content');
+        const logosTrigger = document.getElementById('logos-trigger');
+        const workGrid = document.getElementById('work-grid');
+        const projectHeader = document.getElementById('dynamic-project-title');
         
         menuToggle.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -745,7 +723,76 @@
             }
         });
 
-        /* ---- CUSTOM CURSOR WITH RED GRADIENT ---- */
+        /* ---- LOGOS GALLERY LOAD ---- */
+        logosTrigger.addEventListener('click', () => {
+            // 1. Close menu drawer smoothly
+            document.body.classList.remove('menu-open');
+            
+            // 2. Change out project metadata structure instantly
+            projectHeader.innerHTML = `
+                <div class="separator-title">Identity &amp; Marks</div>
+                <div class="project-meta">
+                    2026<br>
+                    Logo Folio
+                </div>
+            `;
+            
+            // 3. Rebuild inner grid structural markup to serve your 7 logos clean
+            workGrid.innerHTML = `
+                <!-- Logo 1 (No description) -->
+                <a href="assets/logo1.png" target="_blank" class="media-container visible">
+                    <img src="assets/logo1.png" alt="Logo Work 1">
+                    <div class="media-overlay"></div>
+                </a>
+                
+                <!-- Logo 2 (No description) -->
+                <a href="assets/logo2.png" target="_blank" class="media-container visible">
+                    <img src="assets/logo2.png" alt="Logo Work 2">
+                    <div class="media-overlay"></div>
+                </a>
+                
+                <!-- Breakout Title Section Divider for logo explorations -->
+                <div class="logo-exploration-header">Logo Explorations</div>
+                
+                <!-- Logo 3 -->
+                <a href="assets/logo3.png" target="_blank" class="media-container visible">
+                    <img src="assets/logo3.png" alt="Logo Exploration 3">
+                    <div class="media-overlay"></div>
+                </a>
+                
+                <!-- Logo 4 -->
+                <a href="assets/logo4.png" target="_blank" class="media-container visible">
+                    <img src="assets/logo4.png" alt="Logo Exploration 4">
+                    <div class="media-overlay"></div>
+                </a>
+                
+                <!-- Logo 5 -->
+                <a href="assets/logo5.png" target="_blank" class="media-container visible">
+                    <img src="assets/logo5.png" alt="Logo Exploration 5">
+                    <div class="media-overlay"></div>
+                </a>
+                
+                <!-- Logo 6 -->
+                <a href="assets/logo6.png" target="_blank" class="media-container visible">
+                    <img src="assets/logo6.png" alt="Logo Exploration 6">
+                    <div class="media-overlay"></div>
+                </a>
+                
+                <!-- Logo 7 -->
+                <a href="assets/logo7.png" target="_blank" class="media-container visible">
+                    <img src="assets/logo7.png" alt="Logo Exploration 7">
+                    <div class="media-overlay"></div>
+                </a>
+            `;
+            
+            // 4. Scroll smoothly to display fresh gallery elements
+            window.scrollTo({ top: projectHeader.offsetTop - 140, behavior: 'smooth' });
+
+            // Re-apply cursor interactions to newly generated links
+            applyCursorListeners();
+        });
+
+        /* ---- CUSTOM CURSOR SETUP ---- */
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.getElementById('cursor');
             const ring   = document.getElementById('cursor-ring');
@@ -766,10 +813,13 @@
             }
             animateRing();
 
-            document.querySelectorAll('a, button, .media-container').forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-            });
+            function applyCursorListeners() {
+                document.querySelectorAll('a, button, .media-container').forEach(el => {
+                    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+                });
+            }
+            applyCursorListeners();
 
             document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
             document.addEventListener('mouseup',   () => document.body.classList.remove('clicking'));
