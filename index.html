@@ -66,7 +66,7 @@
 
         @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
             body { cursor: none; }
-            a { cursor: none; }
+            a, button { cursor: none; }
             
             #cursor {
                 display: block;
@@ -148,22 +148,126 @@
             stroke-width: 1.5;
         }
 
-        nav {
+        /* --- TOGGLE TRIGGER BUTTON --- */
+        .menu-trigger {
             justify-self: end;
-        }
-        nav ul { list-style: none; display: flex; align-items: center; }
-
-        nav li {
+            background: none;
+            border: none;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
             animation: fadeUp 1s var(--easing) 0.4s forwards;
+            transition: transform 0.4s var(--easing);
+        }
+        
+        .menu-trigger .icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.4s var(--easing);
         }
 
-        .icon {
-            width: 22px; height: 22px;
-            fill: currentColor; display: block;
-            transition: opacity 0.3s, transform 0.3s;
+        /* Rotates the plus button slightly when the menu expands */
+        body.menu-open .menu-trigger {
+            transform: rotate(135deg);
         }
-        a:hover .icon { opacity: 0.5; transform: scale(0.9); }
+
+        /* --- SLIDE DRAWER CONTAINER --- */
+        .nav-drawer {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 340px;
+            height: 100vh;
+            background: rgba(245, 244, 240, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: -10px 0 40px rgba(0,0,0,0.03);
+            border-left: 1px solid rgba(0,0,0,0.06);
+            z-index: 90;
+            padding: 8rem 2.5rem 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.6s var(--easing);
+        }
+
+        body.menu-open .nav-drawer {
+            right: 0;
+        }
+
+        /* --- DRAWER LIST CONTENT --- */
+        .drawer-section-title {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(0, 0, 0, 0.4);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            padding-bottom: 0.5rem;
+        }
+
+        .drawer-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .drawer-list a {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            color: rgba(0,0,0,0.85);
+            display: inline-block;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .drawer-list a:hover {
+            opacity: 0.5;
+            transform: translateX(4px);
+        }
+
+        .exploration-divider {
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: rgba(0, 0, 0, 0.4);
+            margin: 1.5rem 0 0.5rem 0;
+            padding-top: 1rem;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+        }
+
+        .drawer-footer-connect {
+            margin-top: auto;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            padding-top: 2rem;
+        }
+
+        .drawer-footer-connect span {
+            display: block;
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: rgba(0,0,0,0.5);
+            margin-bottom: 0.4rem;
+        }
+
+        .drawer-footer-connect .email-link {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #000;
+            transition: opacity 0.2s;
+        }
+        
+        .drawer-footer-connect .email-link:hover {
+            opacity: 0.5;
+        }
 
         /* --- MAIN --- */
         main {
@@ -171,6 +275,12 @@
             width: 90%;
             max-width: 1140px;
             margin: 0 auto;
+            transition: opacity 0.5s ease;
+        }
+
+        body.menu-open main {
+            opacity: 0.4;
+            pointer-events: none;
         }
 
         /* --- INTRO --- */
@@ -387,19 +497,25 @@
         /* --- MOBILE --- */
         @media (max-width: 768px) {
             header { 
-                grid-template-columns: auto 1fr auto; /* Sets explicit three columns on mobile */
+                grid-template-columns: auto 1fr auto; 
                 padding: 1rem 5%; 
             }
             .brand-name { 
                 font-size: 0.85rem; 
             }
             .header-logo { 
-                display: flex; /* Ensures logo stays visible */
+                display: flex;
                 justify-self: center;
             }
             .logo-icon {
-                width: 22px; /* Responsive scale down for mobile viewports */
+                width: 22px;
                 height: 22px;
+            }
+            
+            .nav-drawer {
+                width: 280px;
+                right: -280px;
+                padding: 6rem 1.5rem 2rem 1.5rem;
             }
             
             main { padding-top: 18vh; width: 92%; }
@@ -442,20 +558,38 @@
             </svg>
         </div>
 
-        <nav>
-            <ul>
-                <li>
-                    <a href="mailto:gillaashishh@gmail.com" class="nav-link" aria-label="Email Me">
-                        <svg class="icon" viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <!-- Dynamic Plus/Close Toggle Trigger -->
+        <button class="menu-trigger" id="menu-toggle" aria-label="Toggle Menu">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
     </header>
 
-    <main>
+    <!-- Slide Drawer Nav Structure -->
+    <div class="nav-drawer" id="nav-drawer">
+        <div class="drawer-section-title">Logos</div>
+        <ul class="drawer-list">
+            <li><a href="assets/logo1.png" target="_blank">Logo 1</a></li>
+            <li><a href="assets/logo2.png" target="_blank">Logo 2</a></li>
+            
+            <li class="exploration-divider">Logo Explorations</li>
+            
+            <li><a href="assets/logo3.png" target="_blank">Logo 3</a></li>
+            <li><a href="assets/logo4.png" target="_blank">Logo 4</a></li>
+            <li><a href="assets/logo5.png" target="_blank">Logo 5</a></li>
+            <li><a href="assets/logo6.png" target="_blank">Logo 6</a></li>
+            <li><a href="assets/logo7.png" target="_blank">Logo 7</a></li>
+        </ul>
+
+        <div class="drawer-footer-connect">
+            <span>Connect with me here</span>
+            <a href="mailto:gillaashishh@gmail.com" class="email-link">gillaashishh@gmail.com</a>
+        </div>
+    </div>
+
+    <main id="main-content">
 
         <section class="intro">
             <p class="intro-eyebrow">Creative Direction &amp; Design</p>
@@ -592,6 +726,25 @@
     </footer>
 
     <script>
+        /* ---- NAVIGATION MENU INTERACTION ---- */
+        const menuToggle = document.getElementById('menu-toggle');
+        const mainContent = document.getElementById('main-content');
+        
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.body.classList.toggle('menu-open');
+        });
+
+        // Close menu if user clicks anywhere outside the nav drawer
+        document.addEventListener('click', (e) => {
+            if (document.body.classList.contains('menu-open')) {
+                const drawer = document.getElementById('nav-drawer');
+                if (!drawer.contains(e.target) && e.target !== menuToggle) {
+                    document.body.classList.remove('menu-open');
+                }
+            }
+        });
+
         /* ---- CUSTOM CURSOR WITH RED GRADIENT ---- */
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.getElementById('cursor');
@@ -613,7 +766,7 @@
             }
             animateRing();
 
-            document.querySelectorAll('a, .media-container').forEach(el => {
+            document.querySelectorAll('a, button, .media-container').forEach(el => {
                 el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
                 el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
             });
