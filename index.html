@@ -66,7 +66,7 @@
 
         @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
             body { cursor: none; }
-            a, button { cursor: none; }
+            a { cursor: none; }
             
             #cursor {
                 display: block;
@@ -132,6 +132,7 @@
             animation: fadeUp 1s var(--easing) 0.2s forwards;
         }
 
+        /* Centered Logo container */
         .header-logo {
             justify-self: center;
             opacity: 0;
@@ -147,103 +148,22 @@
             stroke-width: 1.5;
         }
 
-        .menu-trigger {
+        nav {
             justify-self: end;
-            background: none;
-            border: none;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+        nav ul { list-style: none; display: flex; align-items: center; }
+
+        nav li {
             opacity: 0;
             animation: fadeUp 1s var(--easing) 0.4s forwards;
-            transition: transform 0.4s var(--easing);
-        }
-        
-        .menu-trigger .icon {
-            width: 24px;
-            height: 24px;
-            transition: transform 0.4s var(--easing);
         }
 
-        body.menu-open .menu-trigger {
-            transform: rotate(135deg);
+        .icon {
+            width: 22px; height: 22px;
+            fill: currentColor; display: block;
+            transition: opacity 0.3s, transform 0.3s;
         }
-
-        /* --- SLIDE DRAWER CONTAINER --- */
-        .nav-drawer {
-            position: fixed;
-            top: 0;
-            right: -340px;
-            width: 340px;
-            height: 100vh;
-            background: rgba(245, 244, 240, 0.96);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: -10px 0 40px rgba(0,0,0,0.03);
-            border-left: 1px solid rgba(0,0,0,0.06);
-            z-index: 90;
-            padding: 8rem 2.5rem 3rem 2.5rem;
-            display: flex;
-            flex-direction: column;
-            transition: right 0.6s var(--easing);
-        }
-
-        body.menu-open .nav-drawer {
-            right: 0;
-        }
-
-        .drawer-main-nav {
-            margin-top: 1rem;
-        }
-
-        .logos-menu-btn {
-            background: none;
-            border: none;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #000;
-            display: inline-block;
-            transition: opacity 0.2s, transform 0.2s;
-            text-align: left;
-        }
-
-        .logos-menu-btn:hover {
-            opacity: 0.5;
-            transform: translateX(4px);
-        }
-
-        .drawer-footer-connect {
-            margin-top: auto;
-            border-top: 1px solid rgba(0,0,0,0.08);
-            padding-top: 2rem;
-        }
-
-        .drawer-footer-connect span {
-            display: block;
-            font-family: "Times New Roman", Times, Georgia, serif;
-            font-style: italic;
-            font-size: 1rem;
-            color: rgba(0,0,0,0.5);
-            margin-bottom: 0.4rem;
-        }
-
-        .drawer-footer-connect .email-link {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #000;
-            transition: opacity 0.2s;
-        }
-        
-        .drawer-footer-connect .email-link:hover {
-            opacity: 0.5;
-        }
+        a:hover .icon { opacity: 0.5; transform: scale(0.9); }
 
         /* --- MAIN --- */
         main {
@@ -251,17 +171,22 @@
             width: 90%;
             max-width: 1140px;
             margin: 0 auto;
-            transition: opacity 0.5s ease;
         }
 
-        body.menu-open main {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-
-        /* --- INTRO SECTION --- */
+        /* --- INTRO --- */
         .intro {
             margin-bottom: 8rem;
+        }
+
+        .intro-eyebrow {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.4);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s var(--easing) 0.3s forwards;
         }
 
         .intro h1 {
@@ -279,7 +204,6 @@
             opacity: 0.5;
         }
 
-        /* --- LOADING LINE & SCROLL HINT --- */
         .scroll-hint {
             margin-top: 3rem;
             display: flex;
@@ -310,22 +234,6 @@
             animation: lineScroll 2s ease-in-out 1.5s infinite;
         }
 
-        /* --- SELECTED WORK PANEL --- */
-        .selected-work-panel {
-            margin-top: 4rem;
-            margin-bottom: 2rem;
-            opacity: 0;
-            animation: fadeUp 1s var(--easing) 0.7s forwards;
-        }
-
-        .panel-title {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-        }
-
         /* --- PROJECT HEADER --- */
         .project-header {
             display: flex;
@@ -353,19 +261,6 @@
             text-align: right;
         }
 
-        /* --- LOGO GALLERY SUBSECTION --- */
-        .logo-exploration-header {
-            grid-column: 1 / -1;
-            font-family: "Times New Roman", Times, Georgia, serif;
-            font-style: italic;
-            font-size: clamp(1.5rem, 3vw, 2.2rem);
-            color: rgba(0,0,0,0.4);
-            margin: 4rem 0 1rem 0;
-            padding-top: 3rem;
-            border-top: 1px dashed rgba(0,0,0,0.15);
-            text-align: center;
-        }
-
         /* --- WORK GRID --- */
         .work-grid {
             display: grid;
@@ -386,6 +281,7 @@
             transition: opacity 0.9s var(--easing), transform 0.9s var(--easing);
         }
 
+        /* Full width breakout for hero image */
         .work-grid .media-container:first-child {
             grid-column: 1 / -1;
         }
@@ -395,11 +291,23 @@
             transform: translateY(0);
         }
 
-        /* Reveal transitions */
+        /* Stagger delays for items */
         .media-container:nth-child(2) { transition-delay: 0.05s; }
         .media-container:nth-child(3) { transition-delay: 0.12s; }
         .media-container:nth-child(4) { transition-delay: 0.08s; }
         .media-container:nth-child(5) { transition-delay: 0.15s; }
+        .media-container:nth-child(6) { transition-delay: 0.06s; }
+        .media-container:nth-child(7) { transition-delay: 0.14s; }
+        .media-container:nth-child(8) { transition-delay: 0.09s; }
+        .media-container:nth-child(9) { transition-delay: 0.16s; }
+        .media-container:nth-child(10) { transition-delay: 0.04s; }
+        .media-container:nth-child(11) { transition-delay: 0.11s; }
+        .media-container:nth-child(12) { transition-delay: 0.07s; }
+        .media-container:nth-child(13) { transition-delay: 0.13s; }
+        .media-container:nth-child(14) { transition-delay: 0.05s; }
+        .media-container:nth-child(15) { transition-delay: 0.10s; }
+        .media-container:nth-child(16) { transition-delay: 0.08s; }
+        .media-container:nth-child(17) { transition-delay: 0.17s; }
 
         .media-container img,
         .media-container video {
@@ -410,6 +318,7 @@
             transition: transform 0.8s var(--easing);
         }
 
+        /* Parallax variables */
         .work-grid .media-container:first-child img,
         .work-grid .media-container:first-child video {
             transform: scale(1.0) translateY(var(--scroll-y, 0px));
@@ -477,21 +386,25 @@
 
         /* --- MOBILE --- */
         @media (max-width: 768px) {
-            header { grid-template-columns: auto 1fr auto; padding: 1rem 5%; }
-            .brand-name { font-size: 0.85rem; }
-            .header-logo { display: flex; justify-self: center; }
-            .logo-icon { width: 22px; height: 22px; }
-            .nav-drawer { width: 280px; right: -280px; padding: 6rem 1.5rem 2rem 1.5rem; }
-            
+            header { 
+                grid-template-columns: 1fr auto;
+                padding: 1.5rem; 
+            }
+            .header-logo { display: none; }
+            .brand-name { font-size: 0.9rem; }
             main { padding-top: 18vh; width: 92%; }
             .intro { margin-bottom: 5rem; }
             .intro h1 { font-size: 1.75rem; }
             .project-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             .project-meta { text-align: left; }
             
-            .work-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-            .work-grid .media-container:first-child { grid-column: 1; }
-            .logo-exploration-header { margin: 2rem 0 0.5rem 0; padding-top: 1.5rem;}
+            .work-grid { 
+                grid-template-columns: 1fr; 
+                gap: 2.5rem; 
+            }
+            .work-grid .media-container:first-child { 
+                grid-column: 1; 
+            }
             footer { flex-direction: column; gap: 0.5rem; text-align: left; padding: 2rem 1.5rem; }
         }
     </style>
@@ -508,8 +421,9 @@
     </div>
 
     <header id="site-header">
-        <div class="brand-name" style="cursor: pointer;" onclick="window.location.reload();">Aashish Gill</div>
+        <div class="brand-name">Aashish Gill</div>
         
+        <!-- Center Geometric Logo -->
         <div class="header-logo">
             <svg class="logo-icon" viewBox="0 0 100 100">
                 <line x1="50" y1="15" x2="50" y2="85" />
@@ -518,44 +432,31 @@
             </svg>
         </div>
 
-        <button class="menu-trigger" id="menu-toggle" aria-label="Toggle Menu">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-        </button>
+        <nav>
+            <ul>
+                <li>
+                    <a href="mailto:gillaashishh@gmail.com" class="nav-link" aria-label="Email Me">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </header>
 
-    <div class="nav-drawer" id="nav-drawer">
-        <div class="drawer-main-nav">
-            <button class="logos-menu-btn" id="logos-trigger">Logos</button>
-        </div>
+    <main>
 
-        <div class="drawer-footer-connect">
-            <span>Connect with me here</span>
-            <a href="mailto:gillaashishh@gmail.com" class="email-link">gillaashishh@gmail.com</a>
-        </div>
-    </div>
-
-    <main id="main-content">
-
-        <!-- --- RESTORED INTRO --- -->
         <section class="intro">
-            <h1>Aashish Gill is an independent creative director shaping brand narratives through structured modern design and <em>spatial architecture concepts</em>.</h1>
-            
-            <!-- --- RESTORED LOADING LINE --- -->
+            <p class="intro-eyebrow">Creative Direction &amp; Design</p>
+            <h1>New Delhi based creative director and designer working across film, <em>digital design</em> and visual storytelling.</h1>
             <div class="scroll-hint">
                 <div class="scroll-line"></div>
-                <span>Scroll to explore</span>
+                <span>Selected Works</span>
             </div>
         </section>
 
-        <!-- --- RESTORED SELECTED WORK PANEL --- -->
-        <div class="selected-work-panel">
-            <div class="panel-title">Selected Work</div>
-        </div>
-
-        <div id="dynamic-project-title" class="project-header">
+        <div class="project-header">
             <div class="separator-title">"Nike Architecture"</div>
             <div class="project-meta">
                 2026<br>
@@ -564,95 +465,113 @@
         </div>
 
         <section class="work-grid" id="work-grid">
-            <!-- 1. Hero Campaign Image -->
+
+            <!-- 1. Hero / Main Campaign Image -->
             <a href="assets/top-image.jpg" target="_blank" class="media-container">
                 <img src="assets/top-image.jpg" alt="Nike Architecture — Hero Blueprint">
                 <div class="media-overlay"></div>
             </a>
+
             <!-- 2. Supporting Image -->
             <a href="assets/second-image.jpg" target="_blank" class="media-container">
                 <img src="assets/second-image.jpg" alt="Campaign Context Layout" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 3. Campaign Video 1 -->
+
+            <!-- 3. Campaign Video Loop 1 -->
             <a href="assets/video1.mp4" target="_blank" class="media-container">
                 <video autoplay loop muted playsinline poster="assets/video1-poster.jpg">
                     <source src="assets/video1.mp4" type="video/mp4">
                 </video>
                 <div class="media-overlay"></div>
             </a>
-            <!-- 4. Campaign Video 2 -->
+
+            <!-- 4. Campaign Video Loop 2 -->
             <a href="assets/video2.mp4" target="_blank" class="media-container">
                 <video autoplay loop muted playsinline poster="assets/video2-poster.jpg">
                     <source src="assets/video2.mp4" type="video/mp4">
                 </video>
                 <div class="media-overlay"></div>
             </a>
-            <!-- 5. Asset 1 -->
+
+            <!-- 5. Poster / Project Asset 1 -->
             <a href="assets/image1.jpg" target="_blank" class="media-container">
                 <img src="assets/image1.jpg" alt="Poster Exhibit Alpha" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 6. Asset 2 -->
+
+            <!-- 6. Poster / Project Asset 2 -->
             <a href="assets/image2.jpg" target="_blank" class="media-container">
                 <img src="assets/image2.jpg" alt="Poster Exhibit Beta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 7. Asset 3 -->
+
+            <!-- 7. Poster / Project Asset 3 -->
             <a href="assets/image3.jpg" target="_blank" class="media-container">
                 <img src="assets/image3.jpg" alt="Poster Exhibit Gamma" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 8. Asset 4 -->
+
+            <!-- 8. Poster / Project Asset 4 -->
             <a href="assets/image4.jpg" target="_blank" class="media-container">
                 <img src="assets/image4.jpg" alt="Poster Exhibit Delta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 9. Asset 5 -->
+
+            <!-- 9. Poster / Project Asset 5 -->
             <a href="assets/image5.jpg" target="_blank" class="media-container">
                 <img src="assets/image5.jpg" alt="Poster Exhibit Epsilon" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 10. Asset 6 -->
+
+            <!-- 10. Poster / Project Asset 6 -->
             <a href="assets/image6.jpg" target="_blank" class="media-container">
                 <img src="assets/image6.jpg" alt="Poster Exhibit Zeta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 11. Asset 7 -->
+
+            <!-- 11. Poster / Project Asset 7 -->
             <a href="assets/image7.jpg" target="_blank" class="media-container">
                 <img src="assets/image7.jpg" alt="Poster Exhibit Eta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 12. Asset 8 -->
+
+            <!-- 12. Poster / Project Asset 8 -->
             <a href="assets/image8.jpg" target="_blank" class="media-container">
                 <img src="assets/image8.jpg" alt="Poster Exhibit Theta" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 13. Asset 9 (PNG) -->
-            <a href="assets/image9.png" target="_blank" class="media-container">
-                <img src="assets/image9.png" alt="Poster Exhibit Iota" loading="lazy">
+
+            <!-- 13. Added Poster / Project Asset 9 -->
+            <a href="assets/image9.jpg" target="_blank" class="media-container">
+                <img src="assets/image9.jpg" alt="Poster Exhibit Iota" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 14. Asset 10 (PNG) -->
-            <a href="assets/image10.png" target="_blank" class="media-container">
-                <img src="assets/image10.png" alt="Poster Exhibit Kappa" loading="lazy">
+
+            <!-- 14. Added Poster / Project Asset 10 -->
+            <a href="assets/image10.jpg" target="_blank" class="media-container">
+                <img src="assets/image10.jpg" alt="Poster Exhibit Kappa" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 15. Asset 11 (PNG) -->
-            <a href="assets/image11.png" target="_blank" class="media-container">
-                <img src="assets/image11.png" alt="Poster Exhibit Lambda" loading="lazy">
+
+            <!-- 15. Added Poster / Project Asset 11 -->
+            <a href="assets/image11.jpg" target="_blank" class="media-container">
+                <img src="assets/image11.jpg" alt="Poster Exhibit Lambda" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 16. Asset 12 (PNG) -->
-            <a href="assets/image12.png" target="_blank" class="media-container">
-                <img src="assets/image12.png" alt="Poster Exhibit Mu" loading="lazy">
+
+            <!-- 16. Added Poster / Project Asset 12 -->
+            <a href="assets/image12.jpg" target="_blank" class="media-container">
+                <img src="assets/image12.jpg" alt="Poster Exhibit Mu" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
-            <!-- 17. Asset 13 (JPG) -->
+
+            <!-- 17. Added Poster / Project Asset 13 -->
             <a href="assets/image13.jpg" target="_blank" class="media-container">
                 <img src="assets/image13.jpg" alt="Poster Exhibit Nu" loading="lazy">
                 <div class="media-overlay"></div>
             </a>
+
         </section>
 
     </main>
@@ -663,77 +582,7 @@
     </footer>
 
     <script>
-        /* ---- NAVIGATION MENU INTERACTION ---- */
-        const menuToggle = document.getElementById('menu-toggle');
-        const logosTrigger = document.getElementById('logos-trigger');
-        const workGrid = document.getElementById('work-grid');
-        const projectHeader = document.getElementById('dynamic-project-title');
-        
-        menuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.body.classList.toggle('menu-open');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (document.body.classList.contains('menu-open')) {
-                const drawer = document.getElementById('nav-drawer');
-                if (!drawer.contains(e.target) && e.target !== menuToggle) {
-                    document.body.classList.remove('menu-open');
-                }
-            }
-        });
-
-        /* ---- LOGOS GALLERY LOAD ---- */
-        logosTrigger.addEventListener('click', () => {
-            document.body.classList.remove('menu-open');
-            
-            projectHeader.innerHTML = `
-                <div class="separator-title">Identity &amp; Marks</div>
-                <div class="project-meta">
-                    2026<br>
-                    Logo Folio
-                </div>
-            `;
-            
-            workGrid.innerHTML = `
-                <a href="assets/logo1.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo1.png" alt="Logo Work 1">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo2.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo2.png" alt="Logo Work 2">
-                    <div class="media-overlay"></div>
-                </a>
-                
-                <div class="logo-exploration-header">Logo Explorations</div>
-                
-                <a href="assets/logo3.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo3.png" alt="Logo Exploration 3">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo4.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo4.png" alt="Logo Exploration 4">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo5.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo5.png" alt="Logo Exploration 5">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo6.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo6.png" alt="Logo Exploration 6">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo7.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo7.png" alt="Logo Exploration 7">
-                    <div class="media-overlay"></div>
-                </a>
-            `;
-            
-            window.scrollTo({ top: projectHeader.offsetTop - 140, behavior: 'smooth' });
-            applyCursorListeners();
-        });
-
-        /* ---- CUSTOM CURSOR SETUP ---- */
+        /* ---- CUSTOM CURSOR WITH RED GRADIENT ---- */
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.getElementById('cursor');
             const ring   = document.getElementById('cursor-ring');
@@ -754,13 +603,10 @@
             }
             animateRing();
 
-            function applyCursorListeners() {
-                document.querySelectorAll('a, button, .media-container').forEach(el => {
-                    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-                    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-                });
-            }
-            applyCursorListeners();
+            document.querySelectorAll('a, .media-container').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
 
             document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
             document.addEventListener('mouseup',   () => document.body.classList.remove('clicking'));
@@ -793,5 +639,6 @@
             }, { passive: true });
         }
     </script>
+
 </body>
 </html>
