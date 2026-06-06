@@ -10,13 +10,9 @@
         :root {
             --easing: cubic-bezier(0.16, 1, 0.3, 1);
             --speed: 0.7s;
-            --cursor-grad: radial-gradient(circle, #ff416c 0%, #ff4b2b 100%);
-            --cursor-ring-color: rgba(255, 65, 108, 0.4);
-            --cursor-ring-hover: rgba(255, 65, 108, 0.15);
         }
 
         ::selection { background: #000; color: #fff; }
-
         html { scroll-behavior: smooth; }
 
         body {
@@ -27,9 +23,40 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            cursor: none;
         }
 
-        /* --- BACKGROUND VIDEO --- */
+        a, button { cursor: none; }
+
+        /* --- BUNNY CURSOR --- */
+        #bunny-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            width: 72px;
+            height: 72px;
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s var(--easing);
+            will-change: left, top;
+            left: -100px;
+            top: -100px;
+        }
+
+        #bunny-cursor img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        #bunny-cursor.hovering {
+            transform: translate(-50%, -50%) scale(1.2) rotate(-8deg);
+        }
+
+        #bunny-cursor.clicking {
+            transform: translate(-50%, -50%) scale(0.85) rotate(6deg);
+        }
+
+        /* --- VIDEO BG --- */
         .video-bg-fixed {
             position: fixed;
             top: 0; left: 0;
@@ -43,12 +70,8 @@
             inset: 0;
             background: rgba(245,244,240,0.55);
         }
-        .video-bg-fixed video {
-            width: 100%; height: 100%;
-            object-fit: cover;
-        }
+        .video-bg-fixed video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- NOISE OVERLAY --- */
         body::before {
             content: '';
             position: fixed;
@@ -59,44 +82,6 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
             background-repeat: repeat;
             background-size: 200px 200px;
-        }
-
-        /* --- CUSTOM GRADIENT CURSOR --- */
-        #cursor, #cursor-ring { display: none; }
-
-        @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
-            body { cursor: none; }
-            a, button { cursor: none; }
-            
-            #cursor {
-                display: block;
-                position: fixed;
-                width: 12px;
-                height: 12px;
-                background: var(--cursor-grad);
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 9999;
-                transform: translate(-50%, -50%);
-                transition: width 0.2s var(--easing), height 0.2s var(--easing);
-            }
-
-            #cursor-ring {
-                display: block;
-                position: fixed;
-                width: 38px;
-                height: 38px;
-                border: 1.5px solid var(--cursor-ring-color);
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 9998;
-                transform: translate(-50%, -50%);
-                transition: width 0.4s var(--easing), height 0.4s var(--easing), border-color 0.3s;
-            }
-
-            body.hovering #cursor { width: 6px; height: 6px; }
-            body.hovering #cursor-ring { width: 58px; height: 58px; border-color: var(--cursor-ring-hover); background: rgba(255, 65, 108, 0.03); }
-            body.clicking #cursor { width: 18px; height: 18px; }
         }
 
         a { text-decoration: none; color: #000; }
@@ -139,38 +124,65 @@
             display: flex;
             align-items: center;
         }
-        .logo-icon {
-            width: 28px;
-            height: 28px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.5;
+
+
+        /* --- DESKTOP NAV --- */
+        .desktop-nav {
+            justify-self: end;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            opacity: 0;
+            animation: fadeUp 1s var(--easing) 0.4s forwards;
         }
 
+        .desktop-nav button {
+            background: none;
+            border: none;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #000;
+            padding: 0;
+            transition: opacity 0.2s;
+            position: relative;
+        }
+
+        .desktop-nav button::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #000;
+            transition: width 0.3s var(--easing);
+        }
+
+        .desktop-nav button:hover::after,
+        .desktop-nav button.active::after { width: 100%; }
+        .desktop-nav button:hover { opacity: 0.55; }
+
+        /* --- MOBILE TRIGGER --- */
         .menu-trigger {
+            display: none;
             justify-self: end;
             background: none;
             border: none;
             padding: 5px;
-            display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             animation: fadeUp 1s var(--easing) 0.4s forwards;
             transition: transform 0.4s var(--easing);
         }
-        
-        .menu-trigger .icon {
-            width: 24px;
-            height: 24px;
-            transition: transform 0.4s var(--easing);
-        }
 
-        body.menu-open .menu-trigger {
-            transform: rotate(135deg);
-        }
+        .menu-trigger .icon { width: 24px; height: 24px; transition: transform 0.4s var(--easing); }
+        body.menu-open .menu-trigger { transform: rotate(135deg); }
 
-        /* --- SLIDE DRAWER CONTAINER --- */
+        /* --- SLIDE DRAWER --- */
         .nav-drawer {
             position: fixed;
             top: 0;
@@ -189,15 +201,11 @@
             transition: right 0.6s var(--easing);
         }
 
-        body.menu-open .nav-drawer {
-            right: 0;
-        }
+        body.menu-open .nav-drawer { right: 0; }
 
-        .drawer-main-nav {
-            margin-top: 1rem;
-        }
+        .drawer-main-nav { margin-top: 1rem; display: flex; flex-direction: column; gap: 1.2rem; }
 
-        .logos-menu-btn {
+        .drawer-nav-btn {
             background: none;
             border: none;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -210,11 +218,7 @@
             transition: opacity 0.2s, transform 0.2s;
             text-align: left;
         }
-
-        .logos-menu-btn:hover {
-            opacity: 0.5;
-            transform: translateX(4px);
-        }
+        .drawer-nav-btn:hover { opacity: 0.5; transform: translateX(4px); }
 
         .drawer-footer-connect {
             margin-top: auto;
@@ -240,10 +244,7 @@
             color: #000;
             transition: opacity 0.2s;
         }
-        
-        .drawer-footer-connect .email-link:hover {
-            opacity: 0.5;
-        }
+        .drawer-footer-connect .email-link:hover { opacity: 0.5; }
 
         /* --- MAIN --- */
         main {
@@ -254,15 +255,10 @@
             transition: opacity 0.5s ease;
         }
 
-        body.menu-open main {
-            opacity: 0.4;
-            pointer-events: none;
-        }
+        body.menu-open main { opacity: 0.4; pointer-events: none; }
 
-        /* --- INTRO SECTION --- */
-        .intro {
-            margin-bottom: 8rem;
-        }
+        /* --- INTRO --- */
+        .intro { margin-bottom: 8rem; }
 
         .intro h1 {
             font-size: clamp(2rem, 4vw, 3.4rem);
@@ -274,12 +270,8 @@
             animation: fadeUp 1s var(--easing) 0.5s forwards;
         }
 
-        .intro h1 em {
-            font-style: italic;
-            opacity: 0.5;
-        }
+        .intro h1 em { font-style: italic; opacity: 0.5; }
 
-        /* --- LOADING LINE & SCROLL HINT --- */
         .scroll-hint {
             margin-top: 3rem;
             display: flex;
@@ -295,12 +287,7 @@
             text-transform: uppercase;
             color: rgba(0,0,0,0.35);
         }
-        .scroll-line {
-            width: 40px; height: 1px;
-            background: rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-        }
+        .scroll-line { width: 40px; height: 1px; background: rgba(0,0,0,0.2); position: relative; overflow: hidden; }
         .scroll-line::after {
             content: '';
             position: absolute;
@@ -353,7 +340,7 @@
             text-align: right;
         }
 
-        /* --- LOGO GALLERY SUBSECTION --- */
+        /* --- LOGO DIVIDER --- */
         .logo-exploration-header {
             grid-column: 1 / -1;
             font-family: "Times New Roman", Times, Georgia, serif;
@@ -366,14 +353,17 @@
             text-align: center;
         }
 
-        /* --- WORK GRID --- */
+        /* --- WORK GRID — congested 3-col --- */
         .work-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 4rem 3rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.85rem 0.75rem;
             padding-bottom: 8rem;
             align-items: start;
         }
+
+        .work-grid .media-container.hero { grid-column: 1 / -1; }
+        .work-grid .media-container.wide { grid-column: span 2; }
 
         .media-container {
             display: block;
@@ -382,24 +372,11 @@
             overflow: hidden;
             background: rgba(0,0,0,0.02);
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.9s var(--easing), transform 0.9s var(--easing);
+            transform: translateY(24px);
+            transition: opacity 0.85s var(--easing), transform 0.85s var(--easing);
         }
 
-        .work-grid .media-container:first-child {
-            grid-column: 1 / -1;
-        }
-
-        .media-container.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Reveal transitions */
-        .media-container:nth-child(2) { transition-delay: 0.05s; }
-        .media-container:nth-child(3) { transition-delay: 0.12s; }
-        .media-container:nth-child(4) { transition-delay: 0.08s; }
-        .media-container:nth-child(5) { transition-delay: 0.15s; }
+        .media-container.visible { opacity: 1; transform: translateY(0); }
 
         .media-container img,
         .media-container video {
@@ -410,20 +387,8 @@
             transition: transform 0.8s var(--easing);
         }
 
-        .work-grid .media-container:first-child img,
-        .work-grid .media-container:first-child video {
-            transform: scale(1.0) translateY(var(--scroll-y, 0px));
-        }
-
         .media-container:hover img,
-        .media-container:hover video {
-            transform: scale(1.02); 
-        }
-
-        .media-container:first-child:hover img,
-        .media-container:first-child:hover video {
-            transform: scale(1.02) translateY(var(--scroll-y, 0px));
-        }
+        .media-container:hover video { transform: scale(1.03); }
 
         .media-overlay {
             position: absolute;
@@ -433,9 +398,7 @@
             pointer-events: none;
         }
 
-        .media-container:hover .media-overlay {
-            background: rgba(0,0,0,0.05);
-        }
+        .media-container:hover .media-overlay { background: rgba(0,0,0,0.04); }
 
         /* --- FOOTER --- */
         footer {
@@ -481,25 +444,32 @@
             .brand-name { font-size: 0.85rem; }
             .header-logo { display: flex; justify-self: center; }
             .logo-icon { width: 22px; height: 22px; }
+
+            .desktop-nav { display: none; }
+            .menu-trigger { display: flex; }
+
             .nav-drawer { width: 280px; right: -280px; padding: 6rem 1.5rem 2rem 1.5rem; }
-            
+
             main { padding-top: 18vh; width: 92%; }
             .intro { margin-bottom: 5rem; }
             .intro h1 { font-size: 1.75rem; }
             .project-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             .project-meta { text-align: left; }
-            
-            .work-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-            .work-grid .media-container:first-child { grid-column: 1; }
-            .logo-exploration-header { margin: 2rem 0 0.5rem 0; padding-top: 1.5rem;}
+
+            .work-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+            .work-grid .media-container.hero { grid-column: 1 / -1; }
+            .work-grid .media-container.wide { grid-column: 1 / -1; }
+            .logo-exploration-header { margin: 2rem 0 0.5rem 0; padding-top: 1.5rem; }
             footer { flex-direction: column; gap: 0.5rem; text-align: left; padding: 2rem 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="cursor"></div>
-    <div id="cursor-ring"></div>
+    <!-- REAL BUNNY CURSOR -->
+    <div id="bunny-cursor">
+        <img src="assets/Black_and_white_bunny-Photoroom.png" alt="">
+    </div>
 
     <div class="video-bg-fixed">
         <video autoplay loop muted playsinline poster="assets/background-poster.jpg">
@@ -508,16 +478,20 @@
     </div>
 
     <header id="site-header">
-        <div class="brand-name" style="cursor: pointer;" onclick="window.location.reload();">Aashish Gill</div>
-        
+        <div class="brand-name" onclick="window.location.reload();">Aashish Gill</div>
+
         <div class="header-logo">
-            <svg class="logo-icon" viewBox="0 0 100 100">
-                <line x1="50" y1="15" x2="50" y2="85" />
-                <line x1="15" y1="50" x2="85" y2="50" />
-                <circle cx="50" cy="50" r="6" fill="currentColor"/>
-            </svg>
+            <img src="assets/AASHISH_LOGO-8.png" alt="Aashish Gill Logo" style="width:42px;height:42px;object-fit:contain;">
         </div>
 
+        <!-- Desktop: 3 nav buttons -->
+        <nav class="desktop-nav" id="desktop-nav">
+            <button class="active" data-section="posters">Posters</button>
+            <button data-section="logos">Logos</button>
+            <button data-section="merch">Merchandise</button>
+        </nav>
+
+        <!-- Mobile: + button -->
         <button class="menu-trigger" id="menu-toggle" aria-label="Toggle Menu">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -526,11 +500,13 @@
         </button>
     </header>
 
+    <!-- Mobile drawer -->
     <div class="nav-drawer" id="nav-drawer">
         <div class="drawer-main-nav">
-            <button class="logos-menu-btn" id="logos-trigger">Logos</button>
+            <button class="drawer-nav-btn" data-section="posters">Posters</button>
+            <button class="drawer-nav-btn" data-section="logos">Logos</button>
+            <button class="drawer-nav-btn" data-section="merch">Merchandise</button>
         </div>
-
         <div class="drawer-footer-connect">
             <span>Connect with me here</span>
             <a href="mailto:gillaashishh@gmail.com" class="email-link">gillaashishh@gmail.com</a>
@@ -538,123 +514,24 @@
     </div>
 
     <main id="main-content">
-
-        <!-- --- UPDATED INTRO --- -->
         <section class="intro">
             <h1>Aashish Gill is a New Delhi based creative director and designer working across <em>film, digital design</em> and visual storytelling.</h1>
-            
-            <!-- --- RESTORED LOADING LINE --- -->
             <div class="scroll-hint">
                 <div class="scroll-line"></div>
                 <span>Scroll to explore</span>
             </div>
         </section>
 
-        <!-- --- RESTORED SELECTED WORK PANEL --- -->
         <div class="selected-work-panel">
             <div class="panel-title">Selected Work</div>
         </div>
 
         <div id="dynamic-project-title" class="project-header">
             <div class="separator-title">"Nike Architecture"</div>
-            <div class="project-meta">
-                2026<br>
-                Brand Campaign
-            </div>
+            <div class="project-meta">2026<br>Brand Campaign</div>
         </div>
 
-        <section class="work-grid" id="work-grid">
-            <!-- 1. Hero Campaign Image -->
-            <a href="assets/top-image.jpg" target="_blank" class="media-container">
-                <img src="assets/top-image.jpg" alt="Nike Architecture — Hero Blueprint">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 2. Supporting Image -->
-            <a href="assets/second-image.jpg" target="_blank" class="media-container">
-                <img src="assets/second-image.jpg" alt="Campaign Context Layout" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 3. Campaign Video 1 -->
-            <a href="assets/video1.mp4" target="_blank" class="media-container">
-                <video autoplay loop muted playsinline poster="assets/video1-poster.jpg">
-                    <source src="assets/video1.mp4" type="video/mp4">
-                </video>
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 4. Campaign Video 2 -->
-            <a href="assets/video2.mp4" target="_blank" class="media-container">
-                <video autoplay loop muted playsinline poster="assets/video2-poster.jpg">
-                    <source src="assets/video2.mp4" type="video/mp4">
-                </video>
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 5. Asset 1 -->
-            <a href="assets/image1.jpg" target="_blank" class="media-container">
-                <img src="assets/image1.jpg" alt="Poster Exhibit Alpha" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 6. Asset 2 -->
-            <a href="assets/image2.jpg" target="_blank" class="media-container">
-                <img src="assets/image2.jpg" alt="Poster Exhibit Beta" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 7. Asset 3 -->
-            <a href="assets/image3.jpg" target="_blank" class="media-container">
-                <img src="assets/image3.jpg" alt="Poster Exhibit Gamma" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 8. Asset 4 -->
-            <a href="assets/image4.jpg" target="_blank" class="media-container">
-                <img src="assets/image4.jpg" alt="Poster Exhibit Delta" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 9. Asset 5 -->
-            <a href="assets/image5.jpg" target="_blank" class="media-container">
-                <img src="assets/image5.jpg" alt="Poster Exhibit Epsilon" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 10. Asset 6 -->
-            <a href="assets/image6.jpg" target="_blank" class="media-container">
-                <img src="assets/image6.jpg" alt="Poster Exhibit Zeta" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 11. Asset 7 -->
-            <a href="assets/image7.jpg" target="_blank" class="media-container">
-                <img src="assets/image7.jpg" alt="Poster Exhibit Eta" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 12. Asset 8 -->
-            <a href="assets/image8.jpg" target="_blank" class="media-container">
-                <img src="assets/image8.jpg" alt="Poster Exhibit Theta" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 13. Asset 9 (PNG) -->
-            <a href="assets/image9.png" target="_blank" class="media-container">
-                <img src="assets/image9.png" alt="Poster Exhibit Iota" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 14. Asset 10 (PNG) -->
-            <a href="assets/image10.png" target="_blank" class="media-container">
-                <img src="assets/image10.png" alt="Poster Exhibit Kappa" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 15. Asset 11 (PNG) -->
-            <a href="assets/image11.png" target="_blank" class="media-container">
-                <img src="assets/image11.png" alt="Poster Exhibit Lambda" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 16. Asset 12 (PNG) -->
-            <a href="assets/image12.png" target="_blank" class="media-container">
-                <img src="assets/image12.png" alt="Poster Exhibit Mu" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-            <!-- 17. Asset 13 (JPG) -->
-            <a href="assets/image13.jpg" target="_blank" class="media-container">
-                <img src="assets/image13.jpg" alt="Poster Exhibit Nu" loading="lazy">
-                <div class="media-overlay"></div>
-            </a>
-        </section>
-
+        <section id="work-grid" class="work-grid"></section>
     </main>
 
     <footer>
@@ -663,18 +540,156 @@
     </footer>
 
     <script>
-        /* ---- NAVIGATION MENU INTERACTION ---- */
-        const menuToggle = document.getElementById('menu-toggle');
-        const logosTrigger = document.getElementById('logos-trigger');
+        /* ---- BUNNY CURSOR ---- */
+        const bunny = document.getElementById('bunny-cursor');
+
+        document.addEventListener('mousemove', e => {
+            bunny.style.left = e.clientX + 'px';
+            bunny.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', () => { bunny.classList.remove('hovering'); bunny.classList.add('clicking'); });
+        document.addEventListener('mouseup', () => bunny.classList.remove('clicking'));
+
+        function applyCursorHover() {
+            document.querySelectorAll('a, button, .media-container').forEach(el => {
+                el.addEventListener('mouseenter', () => bunny.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => bunny.classList.remove('hovering'));
+            });
+        }
+
+        /* ---- SECTION DATA ---- */
+        const sections = {
+            posters: {
+                title: '"Nike Architecture"',
+                meta: '2026<br>Brand Campaign',
+                items: [
+                    { src: 'assets/top-image.jpg',   alt: 'Nike Architecture — Hero', cls: 'hero', type: 'img' },
+                    { src: 'assets/second-image.jpg', alt: 'Campaign Context',         cls: 'wide', type: 'img' },
+                    { src: 'assets/image1.jpg',       alt: 'Poster 1',                 cls: '',     type: 'img' },
+                    { src: 'assets/video1.mp4', poster: 'assets/video1-poster.jpg', alt: 'Video 1', cls: '', type: 'video' },
+                    { src: 'assets/image2.jpg',  alt: 'Poster 2',  cls: 'wide', type: 'img' },
+                    { src: 'assets/image3.jpg',  alt: 'Poster 3',  cls: '',     type: 'img' },
+                    { src: 'assets/image4.jpg',  alt: 'Poster 4',  cls: '',     type: 'img' },
+                    { src: 'assets/image5.jpg',  alt: 'Poster 5',  cls: 'wide', type: 'img' },
+                    { src: 'assets/image6.jpg',  alt: 'Poster 6',  cls: '',     type: 'img' },
+                    { src: 'assets/image7.jpg',  alt: 'Poster 7',  cls: '',     type: 'img' },
+                    { src: 'assets/image8.jpg',  alt: 'Poster 8',  cls: '',     type: 'img' },
+                    { src: 'assets/video2.mp4', poster: 'assets/video2-poster.jpg', alt: 'Video 2', cls: 'wide', type: 'video' },
+                    { src: 'assets/image9.png',  alt: 'Poster 9',  cls: '',     type: 'img' },
+                    { src: 'assets/image10.png', alt: 'Poster 10', cls: '',     type: 'img' },
+                    { src: 'assets/image11.png', alt: 'Poster 11', cls: 'wide', type: 'img' },
+                    { src: 'assets/image12.png', alt: 'Poster 12', cls: '',     type: 'img' },
+                    { src: 'assets/image13.jpg', alt: 'Poster 13', cls: '',     type: 'img' },
+                    { src: 'assets/image14.jpg', alt: 'Poster 14', cls: '',     type: 'img' },
+                    { src: 'assets/image15.jpg', alt: 'Poster 15', cls: 'wide', type: 'img' },
+                    { src: 'assets/image16.jpg', alt: 'Poster 16', cls: '',     type: 'img' },
+                    { src: 'assets/image17.jpg', alt: 'Poster 17', cls: '',     type: 'img' },
+                    { src: 'assets/image18.jpg', alt: 'Poster 18', cls: '',     type: 'img' },
+                    { src: 'assets/image19.jpg', alt: 'Poster 19', cls: 'wide', type: 'img' },
+                    { src: 'assets/image20.jpg', alt: 'Poster 20', cls: '',     type: 'img' },
+                    { src: 'assets/image21.jpg', alt: 'Poster 21', cls: '',     type: 'img' },
+                    { src: 'assets/image22.jpg', alt: 'Poster 22', cls: '',     type: 'img' },
+                    { src: 'assets/image23.jpg', alt: 'Poster 23', cls: 'wide', type: 'img' },
+                ]
+            },
+            logos: {
+                title: 'Identity &amp; Marks',
+                meta: '2026<br>Logo Folio',
+                items: [
+                    { src: 'assets/logo1.png', alt: 'Logo Work 1',      cls: 'wide', type: 'img' },
+                    { src: 'assets/logo2.png', alt: 'Logo Work 2',      cls: '',     type: 'img' },
+                    { divider: 'Logo Explorations' },
+                    { src: 'assets/logo3.png', alt: 'Logo Exploration 3', cls: '', type: 'img' },
+                    { src: 'assets/logo4.png', alt: 'Logo Exploration 4', cls: '', type: 'img' },
+                    { src: 'assets/logo5.png', alt: 'Logo Exploration 5', cls: '', type: 'img' },
+                    { src: 'assets/logo6.png', alt: 'Logo Exploration 6', cls: '', type: 'img' },
+                    { src: 'assets/logo7.png', alt: 'Logo Exploration 7', cls: '', type: 'img' },
+                ]
+            },
+            merch: {
+                title: 'Merchandise',
+                meta: '2026<br>Product Design',
+                items: [
+                    { src: 'assets/tee1.jpg', alt: 'Tee 1', cls: 'hero', type: 'img' },
+                    { src: 'assets/tee2.jpg', alt: 'Tee 2', cls: 'wide', type: 'img' },
+                    { src: 'assets/tee3.jpg', alt: 'Tee 3', cls: '',     type: 'img' },
+                    { src: 'assets/tee4.jpg', alt: 'Tee 4', cls: '',     type: 'img' },
+                    { src: 'assets/tee5.jpg', alt: 'Tee 5', cls: 'wide', type: 'img' },
+                    { src: 'assets/tee6.jpg', alt: 'Tee 6', cls: '',     type: 'img' },
+                ]
+            }
+        };
+
+        /* ---- INTERSECTION OBSERVER ---- */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+            });
+        }, { threshold: 0.04 });
+
+        /* ---- RENDER ---- */
         const workGrid = document.getElementById('work-grid');
         const projectHeader = document.getElementById('dynamic-project-title');
-        
-        menuToggle.addEventListener('click', (e) => {
+
+        function renderSection(key) {
+            const data = sections[key];
+            projectHeader.innerHTML = `<div class="separator-title">${data.title}</div><div class="project-meta">${data.meta}</div>`;
+            workGrid.innerHTML = '';
+
+            data.items.forEach((item, i) => {
+                if (item.divider) {
+                    const d = document.createElement('div');
+                    d.className = 'logo-exploration-header';
+                    d.textContent = item.divider;
+                    workGrid.appendChild(d);
+                    return;
+                }
+
+                const a = document.createElement('a');
+                a.href = item.src;
+                a.target = '_blank';
+                a.className = 'media-container' + (item.cls ? ' ' + item.cls : '');
+                a.style.transitionDelay = (i * 0.035) + 's';
+
+                if (item.type === 'video') {
+                    a.innerHTML = `<video autoplay loop muted playsinline poster="${item.poster || ''}"><source src="${item.src}" type="video/mp4"></video><div class="media-overlay"></div>`;
+                } else {
+                    a.innerHTML = `<img src="${item.src}" alt="${item.alt}" loading="lazy"><div class="media-overlay"></div>`;
+                }
+
+                workGrid.appendChild(a);
+                observer.observe(a);
+            });
+
+            applyCursorHover();
+        }
+
+        /* ---- NAVIGATION ---- */
+        function activateSection(key) {
+            renderSection(key);
+            document.querySelectorAll('.desktop-nav button').forEach(b => b.classList.toggle('active', b.dataset.section === key));
+            document.body.classList.remove('menu-open');
+            setTimeout(() => {
+                window.scrollTo({ top: projectHeader.offsetTop - 140, behavior: 'smooth' });
+            }, 50);
+        }
+
+        document.querySelectorAll('.desktop-nav button').forEach(btn => {
+            btn.addEventListener('click', () => activateSection(btn.dataset.section));
+        });
+
+        document.querySelectorAll('.drawer-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => activateSection(btn.dataset.section));
+        });
+
+        /* ---- MOBILE MENU ---- */
+        const menuToggle = document.getElementById('menu-toggle');
+        menuToggle.addEventListener('click', e => {
             e.stopPropagation();
             document.body.classList.toggle('menu-open');
         });
-
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', e => {
             if (document.body.classList.contains('menu-open')) {
                 const drawer = document.getElementById('nav-drawer');
                 if (!drawer.contains(e.target) && e.target !== menuToggle) {
@@ -683,115 +698,15 @@
             }
         });
 
-        /* ---- LOGOS GALLERY LOAD ---- */
-        logosTrigger.addEventListener('click', () => {
-            document.body.classList.remove('menu-open');
-            
-            projectHeader.innerHTML = `
-                <div class="separator-title">Identity &amp; Marks</div>
-                <div class="project-meta">
-                    2026<br>
-                    Logo Folio
-                </div>
-            `;
-            
-            workGrid.innerHTML = `
-                <a href="assets/logo1.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo1.png" alt="Logo Work 1">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo2.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo2.png" alt="Logo Work 2">
-                    <div class="media-overlay"></div>
-                </a>
-                
-                <div class="logo-exploration-header">Logo Explorations</div>
-                
-                <a href="assets/logo3.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo3.png" alt="Logo Exploration 3">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo4.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo4.png" alt="Logo Exploration 4">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo5.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo5.png" alt="Logo Exploration 5">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo6.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo6.png" alt="Logo Exploration 6">
-                    <div class="media-overlay"></div>
-                </a>
-                <a href="assets/logo7.png" target="_blank" class="media-container visible">
-                    <img src="assets/logo7.png" alt="Logo Exploration 7">
-                    <div class="media-overlay"></div>
-                </a>
-            `;
-            
-            window.scrollTo({ top: projectHeader.offsetTop - 140, behavior: 'smooth' });
-            applyCursorListeners();
-        });
-
-        /* ---- CUSTOM CURSOR SETUP ---- */
-        if (window.matchMedia("(pointer: fine)").matches) {
-            const cursor = document.getElementById('cursor');
-            const ring   = document.getElementById('cursor-ring');
-            let mx = 0, my = 0, rx = 0, ry = 0;
-
-            document.addEventListener('mousemove', e => {
-                mx = e.clientX; my = e.clientY;
-                cursor.style.left = mx + 'px';
-                cursor.style.top  = my + 'px';
-            });
-
-            function animateRing() {
-                rx += (mx - rx) * 0.12;
-                ry += (my - ry) * 0.12;
-                ring.style.left = rx + 'px';
-                ring.style.top  = ry + 'px';
-                requestAnimationFrame(animateRing);
-            }
-            animateRing();
-
-            function applyCursorListeners() {
-                document.querySelectorAll('a, button, .media-container').forEach(el => {
-                    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-                    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-                });
-            }
-            applyCursorListeners();
-
-            document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
-            document.addEventListener('mouseup',   () => document.body.classList.remove('clicking'));
-        }
-
         /* ---- HEADER SCROLL ---- */
         const header = document.getElementById('site-header');
         window.addEventListener('scroll', () => {
             header.classList.toggle('scrolled', window.scrollY > 60);
         }, { passive: true });
 
-        /* ---- SCROLL REVEAL ---- */
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); 
-                }
-            });
-        }, { threshold: 0.05 });
-
-        document.querySelectorAll('.media-container').forEach(el => observer.observe(el));
-
-        /* ---- PARALLAX EFFECT ---- */
-        const hero = document.querySelector('.work-grid .media-container:first-child img, .work-grid .media-container:first-child video');
-        if (hero) {
-            window.addEventListener('scroll', () => {
-                const scrollY = window.scrollY;
-                hero.style.setProperty('--scroll-y', `${scrollY * 0.05}px`);
-            }, { passive: true });
-        }
+        /* ---- INIT ---- */
+        renderSection('posters');
+        applyCursorHover();
     </script>
 </body>
 </html>
