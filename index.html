@@ -3,7 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aashish Gill | Creative Director</title>
+
+    <!-- ═══ SEO CORE ═══ -->
+    <title>Aashish Gill | Creative Director & Designer — New Delhi</title>
+    <meta name="description" content="Aashish Gill is a New Delhi based creative director and designer working across film, digital design, brand campaigns and visual storytelling.">
+    <meta name="keywords" content="Aashish Gill, creative director, designer, New Delhi, India, brand campaign, visual design, logo design, film, digital design">
+    <meta name="author" content="Aashish Gill">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.aashishgill.com/">
+
+    <!-- ═══ OPEN GRAPH (shows nicely when shared on WhatsApp, Twitter etc) ═══ -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.aashishgill.com/">
+    <meta property="og:title" content="Aashish Gill | Creative Director & Designer">
+    <meta property="og:description" content="New Delhi based creative director working across film, digital design and visual storytelling.">
+    <meta property="og:image" content="https://www.aashishgill.com/assets/top-image.jpg">
+
+    <!-- ═══ TWITTER CARD ═══ -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Aashish Gill | Creative Director & Designer">
+    <meta name="twitter:description" content="New Delhi based creative director working across film, digital design and visual storytelling.">
+    <meta name="twitter:image" content="https://www.aashishgill.com/assets/top-image.jpg">
+
+    <!-- ═══ STRUCTURED DATA (tells Google exactly who you are) ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Aashish Gill",
+      "url": "https://www.aashishgill.com/",
+      "image": "https://www.aashishgill.com/assets/AASHISH_LOGO-8.png",
+      "jobTitle": "Creative Director",
+      "worksFor": { "@type": "Organization", "name": "Freelance" },
+      "address": { "@type": "PostalAddress", "addressLocality": "New Delhi", "addressCountry": "IN" },
+      "email": "gillaashishh@gmail.com",
+      "sameAs": ["https://www.instagram.com/ahsheeshhh"]
+    }
+    </script>
+
+    <!-- ═══ PERFORMANCE ═══ -->
+    <link rel="preload" href="assets/top-image.jpg" as="image">
+    <link rel="preload" href="assets/AASHISH_LOGO-8.png" as="image">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -11,6 +54,10 @@
             --easing: cubic-bezier(0.16, 1, 0.3, 1);
             --speed: 0.7s;
         }
+
+        /* Performance */
+        img, video { content-visibility: auto; }
+        .media-container { contain: layout style; }
 
         ::selection { background: #000; color: #fff; }
         html { scroll-behavior: smooth; }
@@ -63,6 +110,10 @@
             width: 100vw; height: 100vh;
             z-index: -2;
             overflow: hidden;
+            background-color: #f5f4f0;
+            background-image: url('assets/background-poster.jpg');
+            background-size: cover;
+            background-position: center;
         }
         .video-bg-fixed::after {
             content: '';
@@ -70,7 +121,15 @@
             inset: 0;
             background: rgba(245,244,240,0.55);
         }
-        .video-bg-fixed video { width: 100%; height: 100%; object-fit: cover; }
+        .video-bg-fixed video {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+        .video-bg-fixed video.loaded {
+            opacity: 1;
+        }
 
         body::before {
             content: '';
@@ -472,7 +531,7 @@
     </div>
 
     <div class="video-bg-fixed">
-        <video autoplay loop muted playsinline poster="assets/background-poster.jpg">
+        <video id="bg-video" autoplay loop muted playsinline preload="auto" poster="assets/background-poster.jpg">
             <source src="assets/background-loop.mp4" type="video/mp4">
         </video>
     </div>
@@ -540,6 +599,15 @@
     </footer>
 
     <script>
+        /* ---- BACKGROUND VIDEO FADE IN ---- */
+        const bgVideo = document.getElementById('bg-video');
+        const playVideo = () => { bgVideo.classList.add('loaded'); };
+        if (bgVideo.readyState >= 3) {
+            playVideo();
+        } else {
+            bgVideo.addEventListener('canplaythrough', playVideo, { once: true });
+        }
+
         /* ---- BUNNY CURSOR ---- */
         const bunny = document.getElementById('bunny-cursor');
 
@@ -653,9 +721,10 @@
                 a.style.transitionDelay = (i * 0.035) + 's';
 
                 if (item.type === 'video') {
-                    a.innerHTML = `<video autoplay loop muted playsinline poster="${item.poster || ''}"><source src="${item.src}" type="video/mp4"></video><div class="media-overlay"></div>`;
+                    a.innerHTML = `<video autoplay loop muted playsinline poster="${item.poster || ''}" preload="none"><source src="${item.src}" type="video/mp4"></video><div class="media-overlay"></div>`;
                 } else {
-                    a.innerHTML = `<img src="${item.src}" alt="${item.alt}" loading="lazy"><div class="media-overlay"></div>`;
+                    const priority = i === 0 ? 'fetchpriority="high" loading="eager"' : 'loading="lazy"';
+                    a.innerHTML = `<img src="${item.src}" alt="${item.alt}" decoding="async" ${priority}><div class="media-overlay"></div>`;
                 }
 
                 workGrid.appendChild(a);
