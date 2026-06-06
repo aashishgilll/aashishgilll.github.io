@@ -456,7 +456,86 @@
 
         .media-container:hover .media-overlay { background: rgba(0,0,0,0.04); }
 
-        /* --- FOOTER --- */
+        /* --- CONTACT SECTION --- */
+        .contact-section {
+            padding: 6rem 0 10rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3rem;
+        }
+
+        .contact-eyebrow {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(0,0,0,0.35);
+        }
+
+        .contact-heading {
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: normal;
+            font-style: italic;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            color: #000;
+            max-width: 700px;
+        }
+
+        .contact-heading em {
+            font-style: normal;
+            opacity: 0.3;
+        }
+
+        .contact-email-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: #000;
+            color: #fff;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 1.1rem 2.2rem;
+            border: none;
+            text-decoration: none;
+            transition: background 0.3s ease, transform 0.3s var(--easing);
+        }
+
+        .contact-email-btn:hover {
+            background: #333;
+            transform: translateX(6px);
+            color: #fff;
+        }
+
+        .contact-email-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            transition: transform 0.3s var(--easing);
+        }
+
+        .contact-email-btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        .contact-detail {
+            font-family: "Times New Roman", Times, Georgia, serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: rgba(0,0,0,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .contact-heading { font-size: 2.2rem; }
+        }
         footer {
             display: flex;
             justify-content: space-between;
@@ -540,11 +619,12 @@
 
         <div style="justify-self:center;"></div>
 
-        <!-- Desktop: 3 nav buttons -->
+        <!-- Desktop: 3 nav buttons + contact -->
         <nav class="desktop-nav" id="desktop-nav">
             <button class="active" data-section="posters">Posters</button>
             <button data-section="logos">Logos</button>
             <button data-section="merch">Merchandise</button>
+            <button data-section="contact">Contact</button>
         </nav>
 
         <!-- Mobile: + button -->
@@ -562,6 +642,7 @@
             <button class="drawer-nav-btn" data-section="posters">Posters</button>
             <button class="drawer-nav-btn" data-section="logos">Logos</button>
             <button class="drawer-nav-btn" data-section="merch">Merchandise</button>
+            <button class="drawer-nav-btn" data-section="contact">Contact</button>
         </div>
         <div class="drawer-footer-connect">
             <span>Connect with me here</span>
@@ -742,6 +823,35 @@
 
         /* ---- NAVIGATION ---- */
         function activateSection(key) {
+            if (key === 'contact') {
+                document.body.classList.remove('menu-open');
+                // Update header active state
+                document.querySelectorAll('.desktop-nav button').forEach(b => b.classList.toggle('active', b.dataset.section === key));
+                // Show contact section
+                projectHeader.innerHTML = `<div class="separator-title">Get in Touch</div><div class="project-meta">Available<br>for Projects</div>`;
+                workGrid.className = '';
+                workGrid.innerHTML = `
+                    <div class="contact-section">
+                        <div class="contact-eyebrow">Let's work together</div>
+                        <div class="contact-heading">Got a project <em>&</em> want to create something great?</div>
+                        <a href="mailto:gillaashishh@gmail.com" class="contact-email-btn">
+                            Send me an email
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                        <div class="contact-detail">gillaashishh@gmail.com</div>
+                    </div>
+                `;
+                applyCursorHover();
+                setTimeout(() => {
+                    window.scrollTo({ top: projectHeader.offsetTop - 140, behavior: 'smooth' });
+                }, 50);
+                return;
+            }
+
+            workGrid.className = 'work-grid';
             renderSection(key);
             document.querySelectorAll('.desktop-nav button').forEach(b => b.classList.toggle('active', b.dataset.section === key));
             document.body.classList.remove('menu-open');
