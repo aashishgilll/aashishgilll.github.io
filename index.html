@@ -480,19 +480,15 @@
         }
         .merch-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.85rem 0.75rem;
+            grid-template-columns: 1fr;
+            gap: 0.85rem;
             padding-bottom: 8rem;
-        }
-
-        .merch-grid .media-container {
-            aspect-ratio: 1 / 1;
         }
 
         .merch-grid .media-container img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
+            object-fit: contain;
         }
 
         /* --- LIGHTBOX --- */
@@ -501,7 +497,9 @@
             position: fixed;
             inset: 0;
             z-index: 9990;
-            background: rgba(0,0,0,0.92);
+            background: rgba(245,244,240,0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             align-items: center;
             justify-content: center;
             padding: 2rem;
@@ -512,12 +510,13 @@
         }
 
         #lightbox-img {
-            max-width: 90vw;
-            max-height: 90vh;
+            max-width: 55vw;
+            max-height: 70vh;
             object-fit: contain;
             border: none;
             display: block;
             animation: lbIn 0.35s var(--easing) forwards;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.18);
             -webkit-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
@@ -530,12 +529,12 @@
             right: 1.5rem;
             background: none;
             border: none;
-            color: #fff;
+            color: #000;
             font-size: 2rem;
             font-weight: 300;
             line-height: 1;
             padding: 0.5rem;
-            opacity: 0.7;
+            opacity: 0.4;
             transition: opacity 0.2s, transform 0.2s;
             z-index: 9991;
         }
@@ -546,9 +545,9 @@
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            color: #fff;
+            background: rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.12);
+            color: #000;
             font-size: 1.5rem;
             width: 48px;
             height: 48px;
@@ -561,15 +560,15 @@
 
         #lightbox-prev { left: 1.5rem; }
         #lightbox-next { right: 1.5rem; }
-        #lightbox-prev:hover, #lightbox-next:hover { background: rgba(255,255,255,0.18); }
+        #lightbox-prev:hover, #lightbox-next:hover { background: rgba(0,0,0,0.12); }
 
         @keyframes lbIn {
-            from { opacity: 0; transform: scale(0.95); }
+            from { opacity: 0; transform: scale(0.92); }
             to   { opacity: 1; transform: scale(1); }
         }
 
         @media (max-width: 768px) {
-            .merch-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+            #lightbox-img { max-width: 92vw; max-height: 80vh; }
             #lightbox-prev { left: 0.5rem; }
             #lightbox-next { right: 0.5rem; }
         }
@@ -892,12 +891,12 @@
                 title: 'Merchandise',
                 meta: '2026<br>Product Design',
                 items: [
-                    { src: 'assets/tee1.png', alt: 'Tee 1', cls: 'hero', type: 'img' },
-                    { src: 'assets/tee2.png', alt: 'Tee 2', cls: 'wide', type: 'img' },
-                    { src: 'assets/tee3.png', alt: 'Tee 3', cls: '',     type: 'img' },
-                    { src: 'assets/tee4.png', alt: 'Tee 4', cls: '',     type: 'img' },
-                    { src: 'assets/tee5.png', alt: 'Tee 5', cls: 'wide', type: 'img' },
-                    { src: 'assets/tee6.png', alt: 'Tee 6', cls: '',     type: 'img' },
+                    { src: 'assets/tee1.png', alt: 'Tee 1', cls: '', type: 'img' },
+                    { src: 'assets/tee2.png', alt: 'Tee 2', cls: '', type: 'img' },
+                    { src: 'assets/tee3.png', alt: 'Tee 3', cls: '', type: 'img' },
+                    { src: 'assets/tee4.png', alt: 'Tee 4', cls: '', type: 'img' },
+                    { src: 'assets/tee5.png', alt: 'Tee 5', cls: '', type: 'img' },
+                    { src: 'assets/tee6.png', alt: 'Tee 6', cls: '', type: 'img' },
                 ]
             }
         };
