@@ -456,6 +456,124 @@
 
         .media-container:hover .media-overlay { background: rgba(0,0,0,0.04); }
 
+        /* --- IMAGE PROTECTION --- */
+        .media-container img,
+        .media-container video {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            pointer-events: none;
+        }
+
+        .media-container {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Transparent overlay blocks right click on images */
+        .media-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: transparent;
+        }
+        .merch-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.85rem 0.75rem;
+            padding-bottom: 8rem;
+        }
+
+        .merch-grid .media-container {
+            aspect-ratio: 1 / 1;
+        }
+
+        .merch-grid .media-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9990;
+            background: rgba(0,0,0,0.92);
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        #lightbox.open {
+            display: flex;
+        }
+
+        #lightbox-img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border: none;
+            display: block;
+            animation: lbIn 0.35s var(--easing) forwards;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            pointer-events: none;
+        }
+
+        #lightbox-close {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1;
+            padding: 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.2s, transform 0.2s;
+            z-index: 9991;
+        }
+
+        #lightbox-close:hover { opacity: 1; transform: rotate(90deg); }
+
+        #lightbox-prev, #lightbox-next {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            font-size: 1.5rem;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            z-index: 9991;
+        }
+
+        #lightbox-prev { left: 1.5rem; }
+        #lightbox-next { right: 1.5rem; }
+        #lightbox-prev:hover, #lightbox-next:hover { background: rgba(255,255,255,0.18); }
+
+        @keyframes lbIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .merch-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+            #lightbox-prev { left: 0.5rem; }
+            #lightbox-next { right: 0.5rem; }
+        }
+
         /* --- CONTACT SECTION --- */
         .contact-section {
             padding: 6rem 0 10rem 0;
@@ -600,6 +718,14 @@
     </style>
 </head>
 <body>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox">
+        <button id="lightbox-close">&#215;</button>
+        <button id="lightbox-prev">&#8592;</button>
+        <img id="lightbox-img" src="" alt="">
+        <button id="lightbox-next">&#8594;</button>
+    </div>
 
     <!-- REAL BUNNY CURSOR -->
     <div id="bunny-cursor">
@@ -776,6 +902,83 @@
             }
         };
 
+        /* ---- IMAGE PROTECTION ---- */
+        // Disable right click on entire page
+        document.addEventListener('contextmenu', e => {
+            if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO' || e.target.closest('.media-container') || e.target.closest('#lightbox')) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable drag on images
+        document.addEventListener('dragstart', e => {
+            if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') {
+                e.preventDefault();
+            }
+        });
+
+        // Disable Ctrl+S (save), Ctrl+U (view source), Ctrl+Shift+I (devtools), PrintScreen
+        document.addEventListener('keydown', e => {
+            // Allow lightbox arrow/escape keys
+            if (lightbox.classList.contains('open')) {
+                if (e.key === 'Escape') { closeLightbox(); return; }
+                if (e.key === 'ArrowLeft') { lbShow(lbIndex - 1); return; }
+                if (e.key === 'ArrowRight') { lbShow(lbIndex + 1); return; }
+            }
+            // Block save/source/inspect
+            if ((e.ctrlKey || e.metaKey) && ['s','u','p'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+            }
+            if (e.key === 'PrintScreen') {
+                e.preventDefault();
+            }
+        });
+
+        // Disable long press on mobile (saves image)
+        document.addEventListener('touchstart', e => {
+            if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        /* ---- LIGHTBOX ---- */
+        const lightbox = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightbox-img');
+        const lbClose = document.getElementById('lightbox-close');
+        const lbPrev = document.getElementById('lightbox-prev');
+        const lbNext = document.getElementById('lightbox-next');
+        let lbItems = [];
+        let lbIndex = 0;
+
+        function openLightbox(items, index) {
+            lbItems = items;
+            lbIndex = index;
+            lbImg.src = items[index];
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function lbShow(index) {
+            lbIndex = (index + lbItems.length) % lbItems.length;
+            lbImg.style.animation = 'none';
+            lbImg.offsetHeight;
+            lbImg.style.animation = '';
+            lbImg.src = lbItems[lbIndex];
+        }
+
+        lbClose.addEventListener('click', closeLightbox);
+        lbPrev.addEventListener('click', () => lbShow(lbIndex - 1));
+        lbNext.addEventListener('click', () => lbShow(lbIndex + 1));
+
+        lightbox.addEventListener('click', e => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
         /* ---- INTERSECTION OBSERVER ---- */
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => {
@@ -791,7 +994,12 @@
             const data = sections[key];
             projectHeader.innerHTML = `<div class="separator-title">${data.title}</div><div class="project-meta">${data.meta}</div>`;
             workGrid.innerHTML = '';
+            workGrid.className = key === 'merch' ? 'merch-grid' : 'work-grid';
 
+            // Collect all image srcs for lightbox
+            const imgSrcs = data.items.filter(i => i.type === 'img').map(i => i.src);
+
+            let imgIndex = 0;
             data.items.forEach((item, i) => {
                 if (item.divider) {
                     const d = document.createElement('div');
@@ -801,21 +1009,22 @@
                     return;
                 }
 
-                const a = document.createElement('a');
-                a.href = item.src;
-                a.target = '_blank';
-                a.className = 'media-container' + (item.cls ? ' ' + item.cls : '');
-                a.style.transitionDelay = (i * 0.035) + 's';
+                const el = document.createElement('div');
+                el.className = 'media-container' + (item.cls ? ' ' + item.cls : '');
+                el.style.transitionDelay = (i * 0.035) + 's';
 
                 if (item.type === 'video') {
-                    a.innerHTML = `<video autoplay loop muted playsinline poster="${item.poster || ''}" preload="none"><source src="${item.src}" type="video/mp4"></video><div class="media-overlay"></div>`;
+                    el.innerHTML = `<video autoplay loop muted playsinline poster="${item.poster || ''}" preload="none"><source src="${item.src}" type="video/mp4"></video><div class="media-overlay"></div>`;
                 } else {
+                    const thisIndex = imgIndex++;
                     const priority = i === 0 ? 'fetchpriority="high" loading="eager"' : 'loading="lazy"';
-                    a.innerHTML = `<img src="${item.src}" alt="${item.alt}" decoding="async" ${priority}><div class="media-overlay"></div>`;
+                    el.innerHTML = `<img src="${item.src}" alt="${item.alt}" decoding="async" ${priority}><div class="media-overlay"></div>`;
+                    el.style.cursor = 'zoom-in';
+                    el.addEventListener('click', () => openLightbox(imgSrcs, thisIndex));
                 }
 
-                workGrid.appendChild(a);
-                observer.observe(a);
+                workGrid.appendChild(el);
+                observer.observe(el);
             });
 
             applyCursorHover();
