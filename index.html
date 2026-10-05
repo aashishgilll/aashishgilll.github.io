@@ -30,6 +30,10 @@
     </script>
 
     <link rel="preload" href="assets/AASHISH_LOGO-8.png" as="image">
+    <!-- Jost = Futura-style fallback for devices without Futura (Windows/Android) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@700&display=swap" rel="stylesheet">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -41,13 +45,13 @@
         body {
             background-color: #f5f4f0;
             color: #000;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: "Futura", "Futura PT", "Jost", "Century Gothic", "Trebuchet MS", sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow: hidden;
             cursor: none;
         }
 
-        a { color: #000; text-decoration: none; cursor: none; }
+        a { color: #fff; text-decoration: none; cursor: none; }
 
         ::selection { background: #000; color: #fff; }
 
@@ -68,7 +72,6 @@
         #bunny-cursor.hovering { transform: translate(-50%, -50%) scale(1.2) rotate(-8deg); }
         #bunny-cursor.clicking { transform: translate(-50%, -50%) scale(0.85) rotate(6deg); }
 
-        /* Hide custom cursor on touch devices */
         @media (hover: none) {
             #bunny-cursor { display: none; }
             body, a { cursor: auto; }
@@ -112,40 +115,52 @@
             background-size: 200px 200px;
         }
 
-        /* --- CENTER STAGE --- */
-        .stage {
-            min-height: 100vh;
-            min-height: 100dvh;
+        /* --- LOGO: TOP CENTRE --- */
+        .logo-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            gap: 2.2rem;
-            padding: 2rem;
-            text-align: center;
+            padding-top: clamp(1.2rem, 3vh, 2.4rem);
+            z-index: 10;
         }
 
         .logo {
-            width: clamp(90px, 14vw, 150px);
+            width: clamp(64px, 8vw, 96px);
             height: auto;
             object-fit: contain;
             opacity: 0;
             animation: fadeUp 1s var(--easing) 0.2s forwards;
         }
 
+        /* --- CENTRE: GET IN TOUCH* --- */
+        .stage {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
         .touch-link {
-            font-size: 0.8rem;
+            display: inline-block;
+            white-space: nowrap;
+            font-family: "Futura", "Futura PT", "Jost", "Century Gothic", "Trebuchet MS", sans-serif;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.14em;
-            padding-bottom: 4px;
-            border-bottom: 1px solid #000;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            font-size: 28px; /* replaced by script to hit the target width */
+            color: #fff;
             opacity: 0;
             animation: fadeUp 1s var(--easing) 0.5s forwards;
             transition: opacity 0.25s ease;
         }
         .touch-link:hover { opacity: 0.5 !important; }
-        .touch-link:focus-visible { outline: 2px solid #000; outline-offset: 6px; }
+        .touch-link:focus-visible { outline: 2px solid #fff; outline-offset: 8px; }
 
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(16px); }
@@ -169,12 +184,31 @@
         </video>
     </div>
 
-    <main class="stage">
+    <div class="logo-top">
         <img class="logo" src="assets/AASHISH_LOGO-8.png" alt="Aashish Gill logo">
-        <a class="touch-link" href="mailto:gillaashishh@gmail.com">Get in touch</a>
+    </div>
+
+    <main class="stage">
+        <a class="touch-link" id="touch-link" href="mailto:gillaashishh@gmail.com">Get in touch*</a>
     </main>
 
     <script>
+        /* ---- SIZE "GET IN TOUCH*" ----
+           Phone  (<=768px): about 5 cm wide  -> 72% of screen width
+           Laptop (>768px) : about 10 cm wide -> 10 CSS cm                */
+        const touchLink = document.getElementById('touch-link');
+        function fitTouchLink() {
+            const isPhone = window.matchMedia('(max-width: 768px)').matches;
+            const targetPx = isPhone ? window.innerWidth * 0.72 : 10 * 37.7953;
+            touchLink.style.fontSize = '100px';
+            const w = touchLink.offsetWidth;
+            touchLink.style.fontSize = (100 * targetPx / w) + 'px';
+        }
+        fitTouchLink();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTouchLink);
+        window.addEventListener('load', fitTouchLink);
+        window.addEventListener('resize', fitTouchLink);
+
         /* ---- BACKGROUND VIDEO ---- */
         const bgVideo = document.getElementById('bg-video');
         const loadBgVideo = () => {
