@@ -21,7 +21,6 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Aashish Gill","url":"https://www.aashishgill.com/","image":"https://www.aashishgill.com/assets/AASHISH_LOGO-8.png","jobTitle":"Creative Director","worksFor":{"@type":"Organization","name":"Freelance"},"address":{"@type":"PostalAddress","addressLocality":"New Delhi","addressCountry":"IN"},"email":"gillaashishh@gmail.com","sameAs":["https://www.instagram.com/ahsheeshhh"]}
 </script>
-<link rel="preload" href="assets/top-image.jpg" as="image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Jost = Futura-style fallback for Windows/Android -->
@@ -52,7 +51,7 @@ a{text-decoration:none;color:#000}
 /* HEADER */
 header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:2rem 5%;position:fixed;top:0;width:100%;z-index:100;color:#fff;transition:background .5s ease,color .5s ease}
 header.scrolled{background:rgba(0,0,0,.3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.desktop-nav{grid-column:3;justify-self:end;display:flex;gap:2rem;align-items:center;opacity:0;animation:fadeUp 1s var(--easing) .4s forwards}
+.desktop-nav{grid-column:3;justify-self:end;display:none;gap:2rem;align-items:center;opacity:0;animation:fadeUp 1s var(--easing) .4s forwards}
 .desktop-nav button{background:none;border:none;font-family:var(--sans);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:inherit;padding:0;transition:opacity .2s;position:relative}
 .desktop-nav button::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:currentColor;transition:width .3s var(--easing)}
 .desktop-nav button:hover::after,.desktop-nav button.active::after{width:100%}
@@ -87,8 +86,10 @@ body.menu-open .nav-drawer{right:0}
 main{padding-top:9rem;width:90%;max-width:1140px;margin:0 auto;transition:opacity .5s ease}
 body.menu-open main{opacity:.4;pointer-events:none}
 .intro{margin-bottom:8rem}
-.intro h2{font-size:clamp(2rem,4vw,3.4rem);font-weight:normal;line-height:1.18;max-width:780px;letter-spacing:-.025em}
+.intro h2{font-size:clamp(2rem,4vw,3.4rem);font-weight:normal;line-height:1.18;max-width:780px;margin:0 auto;text-align:center;letter-spacing:-.025em}
 .intro h2 em{font-style:italic;opacity:.5}
+#work-area{display:none}
+#work-area.open{display:block}
 .selected-work-panel{margin:4rem 0 2rem}
 .panel-title{font-family:var(--sans);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.12em}
 .project-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.25)}
@@ -112,6 +113,20 @@ body.menu-open main{opacity:.4;pointer-events:none}
 .poster-masonry{column-count:3;column-gap:.75rem;padding-bottom:8rem}
 .poster-masonry .media-container{break-inside:avoid;margin-bottom:.75rem}
 .poster-masonry .media-container.hero{column-span:all}
+
+/* CONTACT POPUP */
+#contact-modal{display:none;position:fixed;inset:0;z-index:9995;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1.5rem}
+#contact-modal.open{display:flex}
+.cm-box{position:relative;width:100%;max-width:380px;background:#f5f4f0;color:#000;padding:2.5rem 2rem 2rem;display:flex;flex-direction:column;gap:.75rem;animation:lbIn .35s var(--easing) forwards}
+.cm-eyebrow{font-family:var(--sans);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,0,0,.4)}
+.cm-box h3{font-size:2rem;font-weight:normal;font-style:italic;line-height:1.1;letter-spacing:-.02em;margin-bottom:1rem}
+.cm-btn{display:block;width:100%;text-align:center;background:#000;color:#fff;border:none;font-family:var(--sans);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:1rem;transition:background .3s ease}
+.cm-btn:hover{background:#333;color:#fff}
+#cm-copy{background:transparent;color:#000;border:1px solid rgba(0,0,0,.25)}
+#cm-copy:hover{background:rgba(0,0,0,.05)}
+.cm-addr{font-style:italic;font-size:.95rem;color:rgba(0,0,0,.45);text-align:center;margin-top:.5rem}
+.cm-close{position:absolute;top:.6rem;right:.8rem;background:none;border:none;font-size:1.6rem;line-height:1;color:#000;opacity:.4;padding:.3rem}
+.cm-close:hover{opacity:1}
 
 /* LIGHTBOX */
 #lightbox{display:none;position:fixed;inset:0;z-index:9990;background:rgba(245,244,240,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:2rem}
@@ -168,6 +183,18 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:2rem 1.5re
     <button id="lightbox-next">&#8594;</button>
 </div>
 
+<div id="contact-modal">
+    <div class="cm-box">
+        <button class="cm-close" aria-label="Close">&#215;</button>
+        <p class="cm-eyebrow">Let's talk</p>
+        <h3>Write me a message</h3>
+        <a class="cm-btn" data-direct href="https://mail.google.com/mail/?view=cm&fs=1&to=gillaashishh@gmail.com" target="_blank" rel="noopener">Open in Gmail</a>
+        <a class="cm-btn" data-direct href="mailto:gillaashishh@gmail.com">Use my email app</a>
+        <button class="cm-btn" id="cm-copy">Copy email address</button>
+        <p class="cm-addr">gillaashishh@gmail.com</p>
+    </div>
+</div>
+
 <div id="bunny-cursor"><img src="assets/Black_and_white_bunny-Photoroom.png" alt=""></div>
 
 <div class="video-bg-fixed">
@@ -216,9 +243,10 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:2rem 1.5re
 <div class="content">
     <main id="main-content">
         <section class="intro">
-            <h2>Aashish Gill is a New Delhi based creative director and designer working across <em>film, digital design</em> and visual storytelling.</h2>
+            <h2>Aashish Gill is a creative director and designer working across <em>film, digital design</em> and visual storytelling.</h2>
         </section>
 
+        <div id="work-area">
         <div class="selected-work-panel"><div class="panel-title">Selected Work</div></div>
 
         <div id="dynamic-project-title" class="project-header">
@@ -227,6 +255,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:2rem 1.5re
         </div>
 
         <section id="work-grid" class="work-grid"></section>
+        </div>
     </main>
 
     <footer>
@@ -323,9 +352,10 @@ function renderSection(key){
 }
 
 /* NAVIGATION */
-const goTo=()=>setTimeout(()=>window.scrollTo({top:projectHeader.offsetTop-140,behavior:'smooth'}),50);
+const goTo=()=>setTimeout(()=>window.scrollTo({top:projectHeader.getBoundingClientRect().top+window.scrollY-140,behavior:'smooth'}),50);
 function activateSection(key){
   document.body.classList.remove('menu-open');
+  document.getElementById('work-area').classList.add('open');
   document.querySelectorAll('.desktop-nav button').forEach(b=>b.classList.toggle('active',b.dataset.section===key));
   if(key==='contact'){
     projectHeader.innerHTML=`<div class="separator-title">Get in Touch</div><div class="project-meta">Available<br>for Projects</div>`;
@@ -349,16 +379,23 @@ const header=document.getElementById('site-header');
 const onScroll=()=>header.classList.toggle('scrolled',window.scrollY>window.innerHeight-90);
 window.addEventListener('scroll',onScroll,{passive:true});onScroll();
 
-/* EMAIL: open Gmail with the To field filled */
+/* CONTACT POPUP */
+const cm=document.getElementById('contact-modal'),cmCopy=document.getElementById('cm-copy');
+const openCM=()=>{document.body.classList.remove('menu-open');cm.classList.add('open')};
+const closeCM=()=>cm.classList.remove('open');
 document.addEventListener('click',e=>{
-  const a=e.target.closest('a[href^="mailto:"]');if(!a)return;
-  const to='gillaashishh@gmail.com',ua=navigator.userAgent;
-  if(/iPhone|iPad|iPod/i.test(ua)){e.preventDefault();location.href='googlegmail:///co?to='+to;setTimeout(()=>{if(!document.hidden)location.href='mailto:'+to},1200)}
-  else if(!/Android/i.test(ua)){e.preventDefault();window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+to,'_blank','noopener')}
+  const a=e.target.closest('a[href^="mailto:"]');
+  if(a&&!a.hasAttribute('data-direct')){e.preventDefault();openCM()}
+  if(e.target===cm||e.target.closest('.cm-close'))closeCM();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCM()});
+cmCopy.addEventListener('click',()=>{
+  const t='gillaashishh@gmail.com',done=()=>{cmCopy.textContent='Copied ✓';setTimeout(()=>cmCopy.textContent='Copy email address',1800)};
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(done).catch(done);
+  else{const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();document.execCommand('copy');x.remove();done()}
 });
 
 /* INIT */
-renderSection('posters');
 </script>
 </body>
 </html>
