@@ -77,6 +77,14 @@ header{
 }
 .title.soft{font-weight:400}
 
+.jobs-wrap{max-width:780px}
+.jobs-list{list-style:none;margin-top:2.5rem;display:flex;flex-direction:column;gap:1.1rem}
+.jobs-list a{
+  font-size:clamp(.95rem,1.6vw,1.2rem);line-height:1.5;
+  border-bottom:1px solid rgba(27,27,27,.35);padding-bottom:1px;
+  transition:border-color .2s,opacity .2s;
+}
+.jobs-list a:hover{border-color:var(--ink);opacity:.7}
 .back{
   position:fixed;bottom:2rem;left:5%;
   font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;opacity:.6;transition:opacity .2s;
@@ -127,7 +135,14 @@ header{
   </section>
 
   <section class="page" id="jobs-page" data-page="jobs">
-    <h2 class="title">Currently available opportunities at Swoosh</h2>
+    <div class="jobs-wrap">
+      <h2 class="title">Currently available opportunities at Swoosh</h2>
+      <ul class="jobs-list">
+        <li><a href="https://www.linkedin.com/jobs/view/4487010323/" target="_blank" rel="noopener">Specialist II, Visual Merchandising and Styling, Berlin</a></li>
+        <li><a href="https://www.linkedin.com/jobs/view/4486894817/" target="_blank" rel="noopener">Specialist II, Visual Merchandising and Styling, Düsseldorf region</a></li>
+        <li><a href="https://www.linkedin.com/jobs/view/4487069598/" target="_blank" rel="noopener">Visual Merchandising &amp; Styling Specialist, Paris</a></li>
+      </ul>
+    </div>
     <a href="#" class="back">&larr; Back</a>
   </section>
 </main>
